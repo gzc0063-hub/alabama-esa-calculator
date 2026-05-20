@@ -626,7 +626,7 @@ export default function App() {
               {pulaResults.found ? <>
                 <p style={{margin:0,fontSize:14,fontWeight:700,color:k.amb}}>⚠ {pulaResults.count} PULA{pulaResults.count>1?"s":""} detected at this location</p>
                 <p style={{margin:"6px 0 0",fontSize:14,color:k.tx}}>You <strong>must</strong> generate and follow the official bulletin from EPA's Bulletins Live! Two website before application.</p>
-                <a href="https://www.epa.gov/endangered-species/bulletins-live-two-view-bulletins" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",marginTop:8,...s.btn(k.amb,"#fff"),textDecoration:"none",fontSize:14,display:"inline-flex",alignItems:"center",justifyContent:"center",minHeight:"44px"}}>Open Bulletins Live! Two →</a>
+                <a href="https://www.epa.gov/endangered-species/bulletins-live-two-view-bulletins" target="_blank" rel="noopener noreferrer" style={{marginTop:8,...s.btn(k.amb,"#fff"),textDecoration:"none",fontSize:14,display:"inline-flex",alignItems:"center",justifyContent:"center",minHeight:"44px"}}>Open Bulletins Live! Two →</a>
               </> : <>
                 <p style={{margin:0,fontSize:14,fontWeight:700,color:k.grn}}>✓ No PULAs detected at this location</p>
                 <p style={{margin:"4px 0 0",fontSize:14,color:k.txM}}>Informational only. Always verify with EPA's official BLT system — PULA boundaries are updated dynamically.</p>
