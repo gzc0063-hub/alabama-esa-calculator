@@ -153,7 +153,7 @@ const CATL = {relief:"Mitigation Relief & Field Characteristics",infield:"In-Fie
 
 // ─── STYLES ───
 const f = "'DM Sans','Helvetica Neue',system-ui,sans-serif";
-const k = {bg:"#f5f3f0",card:"#fff",bdr:"#d9d4cc",bdrL:"#ebe7e0",tx:"#1a1a1a",txM:"#6b6155",txL:"#a09484",acc:"#DD550C",accBg:"#fef2ea",grn:"#267a32",grnBg:"#ecf6ee",grnL:"#b3deb8",amb:"#b27d0a",ambBg:"#fdf7e5",red:"#b83025",redBg:"#fceeed",blu:"#03244d",bluBg:"#e8eef5",pur:"#6d3abf",purBg:"#f3edfc",hdr:"#03244d",hdrTx:"#ffffff",tagBg:"#f0ebe3"};
+const k = {bg:"#f5f3f0",card:"#fff",bdr:"#d9d4cc",bdrL:"#ebe7e0",tx:"#1a1a1a",txM:"#5a5147",txL:"#8a7b6b",acc:"#B34407",accBg:"#fef2ea",grn:"#1f6429",grnBg:"#ecf6ee",grnL:"#a0cfa5",amb:"#8a6007",ambBg:"#fdf7e5",red:"#9a281f",redBg:"#fceeed",blu:"#03244d",bluBg:"#e8eef5",pur:"#59309b",purBg:"#f3edfc",hdr:"#03244d",hdrTx:"#ffffff",tagBg:"#f0ebe3"};
 
 // Last verified data update — UPDATE THIS DATE every time you change any data
 const LAST_DATA_UPDATE = "March 20, 2026";
@@ -301,7 +301,7 @@ export default function App() {
         setHsgError("No soil data found at these coordinates. Try a nearby point within a mapped soil polygon.");
       }
     } catch (err) {
-      setHsgError(`API error: ${err.message}. USDA servers may be temporarily unavailable — try again or use Web Soil Survey manually.`);
+      setHsgError(`API error: ${err.message}. USDA servers may be temporarily unavailable or you have a poor network connection — try again or use Web Soil Survey manually.`);
     }
     setHsgLoading(false);
   };
@@ -325,7 +325,7 @@ export default function App() {
         setPulaResults({ found: false, count: 0, features: [] });
       }
     } catch (err) {
-      setPulaError(`BLT API query failed: ${err.message}. Use EPA's Bulletins Live! Two website directly for official compliance.`);
+      setPulaError(`BLT API query failed: ${err.message}. You may have a poor network connection. Use EPA's Bulletins Live! Two website directly for official compliance.`);
       setPulaResults(null);
     }
     setPulaLoading(false);
@@ -366,27 +366,27 @@ export default function App() {
     pg:{fontFamily:f,background:k.bg,color:k.tx,minHeight:"100vh",fontSize:14,lineHeight:1.55},
     hd:{background:k.hdr,padding:"16px 24px",borderBottom:`3px solid ${k.acc}`},
     cd:{background:k.card,border:`1px solid ${k.bdr}`,borderRadius:10,padding:"16px 18px",marginBottom:14,boxShadow:"0 1px 2px rgba(0,0,0,0.03)"},
-    lb:{fontSize:11,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px",marginBottom:7,display:"block"},
-    sl:{width:"100%",padding:"9px 12px",borderRadius:6,border:`1px solid ${k.bdr}`,fontSize:14,fontFamily:f,color:k.tx,background:k.bg,boxSizing:"border-box"},
-    inp:{width:"100%",boxSizing:"border-box",padding:"9px 12px",borderRadius:6,border:`1px solid ${k.bdr}`,fontSize:14,fontFamily:f,color:k.tx,background:k.bg,outline:"none"},
-    btn:(bg,fg)=>({padding:"7px 16px",borderRadius:6,border:"none",background:bg,color:fg,fontSize:13,fontWeight:700,cursor:"pointer"}),
-    tg:(bg,fg)=>({display:"inline-flex",alignItems:"center",padding:"2px 9px",borderRadius:4,background:bg,color:fg,fontSize:11,fontWeight:600,whiteSpace:"nowrap"}),
+    lb:{fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px",marginBottom:7,display:"block"},
+    sl:{width:"100%",padding:"9px 12px",minHeight:"44px",borderRadius:6,border:`1px solid ${k.bdr}`,fontSize:14,fontFamily:f,color:k.tx,background:k.bg,boxSizing:"border-box"},
+    inp:{width:"100%",boxSizing:"border-box",padding:"9px 12px",minHeight:"44px",borderRadius:6,border:`1px solid ${k.bdr}`,fontSize:14,fontFamily:f,color:k.tx,background:k.bg,outline:"none"},
+    btn:(bg,fg)=>({padding:"7px 16px",minHeight:"44px",minWidth:"44px",borderRadius:6,border:"none",background:bg,color:fg,fontSize:14,fontWeight:700,cursor:"pointer"}),
+    tg:(bg,fg)=>({display:"inline-flex",alignItems:"center",padding:"2px 9px",borderRadius:4,background:bg,color:fg,fontSize:14,fontWeight:600,whiteSpace:"nowrap"}),
     tb:{display:"flex",gap:0,borderBottom:`2px solid ${k.bdr}`,background:k.card},
-    tbi:a=>({padding:"10px 20px",fontSize:13,fontWeight:a?700:500,color:a?k.acc:k.txM,borderBottom:a?`3px solid ${k.acc}`:"3px solid transparent",cursor:"pointer",background:"transparent",border:"none",marginBottom:"-2px"}),
+    tbi:a=>({padding:"10px 20px",minHeight:"44px",fontSize:14,fontWeight:a?700:500,color:a?k.acc:k.txM,borderBottom:a?`3px solid ${k.acc}`:"3px solid transparent",cursor:"pointer",background:"transparent",border:"none",marginBottom:"-2px"}),
   };
 
   return (
     <div style={s.pg}>
-      <div style={{...s.hd,background:"linear-gradient(135deg, #03244d 0%, #041e3d 100%)",borderBottom:"4px solid #DD550C"}}>
+      <div style={{...s.hd,background:"linear-gradient(135deg, #03244d 0%, #041e3d 100%)",borderBottom:"4px solid #B34407"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8}}>
           <div>
-            <h1 style={{margin:0,fontSize:20,fontWeight:800,color:"#ffffff",letterSpacing:"-0.3px"}}>Alabama ESA Mitigation Points Calculator <span style={{fontSize:12,fontWeight:500,color:"#8a9bb5"}}>v2.1</span></h1>
-            <p style={{margin:"3px 0 0",fontSize:11,color:"#8a9bb5"}}>Cotton · Soybean · Peanut · Corn &nbsp;|&nbsp; ACES Herbicide Recommendations &nbsp;|&nbsp; EPA Herbicide Strategy (Aug 2024)</p>
-            <p style={{margin:"2px 0 0",fontSize:11,color:"#8a9bb5"}}>{LABEL_COVERAGE_NOTE}</p>
-            <p style={{margin:"2px 0 0",fontSize:10,color:"#6a7b95"}}>Gourav Chahal, PhD Student · Auburn University · Dept. of Crop, Soil & Environmental Sciences · Advisors: Dr. A.J. Price & Dr. D.P. Russell</p>
+            <h1 style={{margin:0,fontSize:20,fontWeight:800,color:"#ffffff",letterSpacing:"-0.3px"}}>Alabama ESA Mitigation Points Calculator <span style={{fontSize:14,fontWeight:500,color:"#cdd6e4"}}>v2.1</span></h1>
+            <p style={{margin:"3px 0 0",fontSize:14,color:"#cdd6e4"}}>Cotton · Soybean · Peanut · Corn &nbsp;|&nbsp; ACES Herbicide Recommendations &nbsp;|&nbsp; EPA Herbicide Strategy (Aug 2024)</p>
+            <p style={{margin:"2px 0 0",fontSize:14,color:"#cdd6e4"}}>{LABEL_COVERAGE_NOTE}</p>
+            <p style={{margin:"2px 0 0",fontSize:14,color:"#a6b5c9"}}>Gourav Chahal, PhD Student · Auburn University · Dept. of Crop, Soil & Environmental Sciences · Advisors: Dr. A.J. Price & Dr. D.P. Russell</p>
           </div>
           <div style={{flexShrink:0}}>
-            <div style={{background:"#DD550C",color:"#fff",padding:"4px 12px",borderRadius:5,fontSize:11,fontWeight:700,display:"inline-block"}}>Data verified: {LAST_DATA_UPDATE}</div>
+            <div style={{background:"#B34407",color:"#fff",padding:"4px 12px",borderRadius:5,fontSize:14,fontWeight:700,display:"inline-block"}}>Data verified: {LAST_DATA_UPDATE}</div>
           </div>
         </div>
       </div>
@@ -399,27 +399,31 @@ export default function App() {
 
       <div style={{padding:"16px 22px",maxWidth:960,margin:"0 auto"}}>
         {/* Planning-only notice */}
-        <div style={{padding:"10px 16px",background:"#03244d0a",border:"1px solid #03244d22",borderRadius:7,marginBottom:14,fontSize:12,color:"#03244d",lineHeight:1.7}}>
-          <strong style={{color:"#DD550C"}}>For Planning Purposes Only.</strong> This tool helps you <strong>plan</strong> your herbicide program's ESA compliance — it does not replace the product label or EPA's official Bulletins Live! Two system. The product label is the law. Always read the current label and generate official BLT bulletins at <strong>epa.gov/endangered-species/bulletins-live-two-view-bulletins</strong> before every application. No compliance guarantee is expressed or implied.
+        <div style={{padding:"14px 18px",background:"#fff8f5",border:"2px solid #B34407",borderRadius:8,marginBottom:16,fontSize:14,color:"#1a1a1a",lineHeight:1.6}}>
+          <strong style={{color:"#B34407",fontSize:15,display:"block",marginBottom:6}}>⚠️ FOR PLANNING PURPOSES ONLY — THE LABEL IS THE LAW</strong>
+          This tool helps you <strong>plan</strong> your herbicide program's ESA compliance. It does not replace the product label or EPA's official Bulletins Live! Two system. Always read the current label and generate official BLT bulletins at <strong>epa.gov/endangered-species/bulletins-live-two-view-bulletins</strong> before every application. No compliance guarantee is expressed or implied.
+          <div style={{marginTop:8,padding:"8px 12px",background:"#fef2ea",borderLeft:"3px solid #B34407",borderRadius:4,fontSize:13}}>
+            <strong>Agronomic Best Practices:</strong> Do not compromise effective weed control (e.g., using multiple effective sites of action) simply to avoid ESA mitigation points. Products listed as "ESA Pending" are expected to require mitigation points in the future as EPA completes their registration reviews.
+          </div>
         </div>
 
         {/* ═══ CALCULATOR TAB ═══ */}
         {tab === "calc" && (<>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
             <div style={s.cd}>
-              <label style={s.lb}>Step 1a — County</label>
-              <select value={county} onChange={e=>setCounty(e.target.value)} style={s.sl}>
+              <label htmlFor="county-select" style={s.lb}>Step 1a — County</label>
+              <select id="county-select" value={county} onChange={e=>setCounty(e.target.value)} style={s.sl}>
                 <option value="">Select...</option>
                 {AL.map(c=><option key={c.n} value={c.n}>{c.n} ({c.v==="H"?"High · 0 pts":"Medium · 2 pts"})</option>)}
               </select>
-              {cty && <div style={{marginTop:8,padding:"8px 12px",borderRadius:6,background:cty.v==="H"?k.redBg:k.ambBg,fontSize:13}}>
+              {cty && <div style={{marginTop:8,padding:"8px 12px",borderRadius:6,background:cty.v==="H"?k.redBg:k.ambBg,fontSize:14}}>
                 <strong style={{color:cty.v==="H"?k.red:k.amb}}>{cty.v==="H"?"High":"Medium"} Vulnerability</strong>
                 <span style={{marginLeft:6,color:k.txM}}>→ {ctyRel} relief pts</span>
               </div>}
             </div>
             <div style={s.cd}>
-              <label style={s.lb}>Step 1b — Crop</label>
-              <select value={crop} onChange={e=>{setCrop(e.target.value);setPlan([]);}} style={s.sl}>
+              <label htmlFor="crop-select" style={s.lb}>Step 1b — Crop</label>
+              <select id="crop-select" value={crop} onChange={e=>{setCrop(e.target.value);setPlan([]);}} style={s.sl}>
                 <option value="">Select...</option>
                 {Object.entries(CL).map(([k2,v])=><option key={k2} value={k2}>{v}</option>)}
               </select>
@@ -428,8 +432,8 @@ export default function App() {
 
           {/* HSG indicator */}
           {hsgResult && <div style={{...s.cd,borderLeft:`4px solid ${k.pur}`,background:k.purBg,padding:"10px 16px",marginBottom:14}}>
-            <span style={{fontSize:12,fontWeight:700,color:k.pur}}>Soil HSG from USDA lookup: {hsgResult}</span>
-            <span style={{marginLeft:12,fontSize:12,color:k.txM}}>
+            <span style={{fontSize:14,fontWeight:700,color:k.pur}}>Soil HSG from USDA lookup: {hsgResult}</span>
+            <span style={{marginLeft:12,fontSize:14,color:k.txM}}>
               {["A","B","A/D","B/D"].includes(hsgResult.toUpperCase()) ? "Enlist products: 4 runoff pts" : "Enlist products: 6 runoff pts (higher tier for HSG C/D)"}
             </span>
           </div>}
@@ -438,29 +442,29 @@ export default function App() {
           {crop && county && (<div style={s.cd}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
               <div>
-                <h3 style={{margin:0,fontSize:12,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 2 — Spray Plan</h3>
+                <h2 style={{margin:0,fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 2 — Spray Plan</h2>
               </div>
               <button onClick={()=>setShowAdd(!showAdd)} style={s.btn(showAdd?k.red:k.acc,"#fff")}>{showAdd?"Cancel":"+ Add"}</button>
             </div>
 
             {showAdd && <div style={{background:k.bg,border:`1px solid ${k.bdr}`,borderRadius:7,padding:12,marginBottom:12}}>
               <div style={{display:"flex",gap:6,marginBottom:8}}>
-                <input placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)} autoFocus style={{...s.inp,flex:1}} />
-                <select value={tmFilt} onChange={e=>setTmFilt(e.target.value)} style={{...s.sl,width:"auto",minWidth:80}}><option value="ALL">All</option>{Object.entries(TL).map(([k2,v])=><option key={k2} value={k2}>{v}</option>)}</select>
+                <input aria-label="Search herbicides" placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)} autoFocus style={{...s.inp,flex:1}} />
+                <select aria-label="Filter by timing" value={tmFilt} onChange={e=>setTmFilt(e.target.value)} style={{...s.sl,width:"auto",minWidth:80}}><option value="ALL">All</option>{Object.entries(TL).map(([k2,v])=><option key={k2} value={k2}>{v}</option>)}</select>
               </div>
               <div style={{maxHeight:220,overflowY:"auto"}}>
                 {cropH.map(h=>(
-                  <div key={h.id} onClick={()=>addH(h)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",borderBottom:`1px solid ${k.bdrL}`,cursor:"pointer",borderRadius:5}}
+                  <div key={h.id} onClick={()=>addH(h)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 10px",minHeight:"44px",borderBottom:`1px solid ${k.bdrL}`,cursor:"pointer",borderRadius:5}}
                     onMouseOver={e=>e.currentTarget.style.background=k.bdrL} onMouseOut={e=>e.currentTarget.style.background="transparent"}>
-                    <div><span style={{fontWeight:700,fontSize:13}}>{h.nm}</span><span style={{marginLeft:6,fontSize:12,color:k.txM}}>{h.ai} · Grp {h.grp}</span></div>
+                    <div><span style={{fontWeight:700,fontSize:14}}>{h.nm}</span><span style={{marginLeft:6,fontSize:14,color:k.txM}}>{h.ai} · Grp {h.grp}</span></div>
                     <div style={{display:"flex",gap:4}}>{h.esa==="active"&&<span style={s.tg(k.redBg,k.red)}>ESA Label</span>}</div>
                   </div>
                 ))}
-                {cropH.length===0&&<p style={{color:k.txM,textAlign:"center",padding:16,fontSize:12}}>No products match.</p>}
+                {cropH.length===0&&<p style={{color:k.txM,textAlign:"center",padding:16,fontSize:14}}>No products match.</p>}
               </div>
             </div>}
 
-            {plan.length===0 ? <div style={{border:`1px dashed ${k.bdr}`,borderRadius:7,padding:"24px 16px",textAlign:"center",color:k.txM,fontSize:12}}>Add herbicides for your {CL[crop]} program.</div> :
+            {plan.length===0 ? <div style={{border:`1px dashed ${k.bdr}`,borderRadius:7,padding:"24px 16px",textAlign:"center",color:k.txM,fontSize:14}}>Add herbicides for your {CL[crop]} program.</div> :
             <div style={{display:"flex",flexDirection:"column",gap:6}}>
               {plan.map(h=>{
                 const ex = expH===h.id;
@@ -470,7 +474,7 @@ export default function App() {
                     <div style={{flex:1}}>
                       <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
                         <span style={{fontWeight:700,fontSize:14}}>{h.nm}</span>
-                        <span style={{fontSize:11,color:k.txM}}>Grp {h.grp} · {h.mfr} · {h.reg}</span>
+                        <span style={{fontSize:14,color:k.txM}}>Grp {h.grp} · {h.mfr} · {h.reg}</span>
                       </div>
                       <div style={{display:"flex",gap:4,marginTop:5,flexWrap:"wrap"}}>
                         {h.esa==="active"?<>
@@ -480,20 +484,20 @@ export default function App() {
                           {h.blt&&<span style={s.tg(k.purBg,k.pur)}>BLT Required</span>}
                         </>:<>
                           <span style={s.tg(k.tagBg,k.txM)}>ESA Pending</span>
-                          <span style={{fontSize:11,color:k.txM,fontStyle:"italic"}}>{h.pw||"Awaiting registration review under Herbicide Strategy."}</span>
+                          <span style={{fontSize:14,color:k.txM,fontStyle:"italic"}}>{h.pw||"Awaiting registration review under Herbicide Strategy."}</span>
                         </>}
                       </div>
                     </div>
                     <div style={{display:"flex",gap:4,flexShrink:0}}>
-                      <button onClick={()=>setExpH(ex?null:h.id)} style={{background:"none",border:"none",cursor:"pointer",fontSize:11,color:k.blu,fontWeight:600}}>{ex?"Hide":"Info"}</button>
-                      <button onClick={()=>remH(h.id)} style={{background:"none",border:"none",color:k.red,cursor:"pointer",fontSize:15}}>✕</button>
+                      <button onClick={()=>setExpH(ex?null:h.id)} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:k.blu,fontWeight:600,minWidth:"44px",minHeight:"44px"}}>{ex?"Hide":"Info"}</button>
+                      <button onClick={()=>remH(h.id)} style={{background:"none",border:"none",color:k.red,cursor:"pointer",fontSize:15,minWidth:"44px",minHeight:"44px"}}>✕</button>
                     </div>
                   </div>
-                  {ex&&<div style={{marginTop:8,padding:"8px 12px",background:k.bg,borderRadius:5,fontSize:12,lineHeight:1.6}}>
+                  {ex&&<div style={{marginTop:8,padding:"8px 12px",background:k.bg,borderRadius:5,fontSize:14,lineHeight:1.6}}>
                     <p style={{margin:"0 0 4px"}}><strong>AI:</strong> {h.ai} &nbsp;|&nbsp; <strong>Timing:</strong> {h.tm.map(t=>TL[t]).join(", ")}</p>
                     {h.pw&&<p style={{margin:"0 0 4px",color:k.amb}}><strong>ESA Status:</strong> {h.pw}</p>}
                     <p style={{margin:"0 0 4px"}}>{h.note}</p>
-                    <p style={{margin:0,color:k.txM,fontSize:11}}><strong>Source:</strong> {h.ref}</p>
+                    <p style={{margin:0,color:k.txM,fontSize:14}}><strong>Source:</strong> {h.ref}</p>
                   </div>}
                 </div>;
               })}
@@ -502,7 +506,7 @@ export default function App() {
 
           {/* Consolidated */}
           {plan.length>0&&esaN>0&&<div style={{...s.cd,borderLeft:`4px solid ${k.acc}`}}>
-            <h3 style={{margin:"0 0 10px",fontSize:12,fontWeight:700,color:k.acc,textTransform:"uppercase",letterSpacing:"1px"}}>Consolidated ESA Requirements</h3>
+            <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.acc,textTransform:"uppercase",letterSpacing:"1px"}}>Consolidated ESA Requirements</h2>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:8}}>
               <MC l="Runoff Pts" v={maxReq} su="required" co={k.amb}/>
               <MC l="Drift Buffer" v={`${maxBuf} ft`} su="downwind" co={k.blu}/>
@@ -513,28 +517,28 @@ export default function App() {
 
           {/* Points calc */}
           {plan.length>0&&maxReq>0&&<div style={s.cd}>
-            <h3 style={{margin:"0 0 10px",fontSize:12,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 3 — Mitigation Points</h3>
+            <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 3 — Mitigation Points</h2>
             <div style={{padding:"12px 16px",borderRadius:7,border:`2px solid ${ok?k.grn:k.amb}`,background:ok?k.grnBg:k.bg,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                <span style={{fontSize:12,fontWeight:600,color:k.txM}}>Earned / Required</span>
+                <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Earned / Required</span>
                 <span style={{fontSize:24,fontWeight:800,color:ok?k.grn:k.amb}}>{earned} / {maxReq}</span>
               </div>
               <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden"}}>
                 <div style={{height:"100%",width:`${Math.min(100,maxReq>0?(earned/maxReq)*100:0)}%`,background:ok?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
               </div>
-              <p style={{margin:"6px 0 0",fontSize:12,fontWeight:600,color:ok?k.grn:k.amb}}>
+              <p style={{margin:"6px 0 0",fontSize:14,fontWeight:600,color:ok?k.grn:k.amb}}>
                 {ok?"✓ Compliant for all ESA-labeled products":`${deficit} more pt${deficit!==1?"s":""} needed — ${county} County`}
               </p>
             </div>
 
             {Object.entries(CATL).map(([ck,cl])=>(
               <div key={ck} style={{marginBottom:14}}>
-                <h4 style={{margin:"0 0 6px",fontSize:11,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"0.8px",borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{cl}</h4>
+                <h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"0.8px",borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{cl}</h3>
                 {PRACT.filter(p=>p.cat===ck).map(p=>{
                   const a = prac.includes(p.id);
-                  return <div key={p.id} onClick={()=>togP(p.id)} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 10px",borderRadius:6,cursor:"pointer",background:a?k.grnBg:"transparent",border:`1px solid ${a?k.grnL:"transparent"}`,marginBottom:3}}>
-                    <div style={{width:18,height:18,borderRadius:4,border:`2px solid ${a?k.grn:k.bdr}`,background:a?k.grn:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff",fontWeight:800,flexShrink:0,marginTop:1}}>{a&&"✓"}</div>
-                    <div style={{flex:1}}><div style={{fontSize:13,fontWeight:600,color:a?k.tx:k.txM}}>{p.nm}</div><div style={{fontSize:11,color:k.txM,marginTop:1}}>{p.d}</div></div>
+                  return <div key={p.id} onClick={()=>togP(p.id)} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 10px",minHeight:"44px",borderRadius:6,cursor:"pointer",background:a?k.grnBg:"transparent",border:`1px solid ${a?k.grnL:"transparent"}`,marginBottom:3}}>
+                    <div style={{width:18,height:18,borderRadius:4,border:`2px solid ${a?k.grn:k.bdr}`,background:a?k.grn:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"#fff",fontWeight:800,flexShrink:0,marginTop:1}}>{a&&"✓"}</div>
+                    <div style={{flex:1}}><div style={{fontSize:14,fontWeight:600,color:a?k.tx:k.txM}}>{p.nm}</div><div style={{fontSize:14,color:k.txM,marginTop:1}}>{p.d}</div></div>
                     <span style={{...s.tg(k.ambBg,k.amb),fontWeight:800,flexShrink:0}}>+{p.pts}</span>
                   </div>;
                 })}
@@ -546,8 +550,8 @@ export default function App() {
         {/* ═══ HSG & PULA TAB ═══ */}
         {tab === "hsg" && (<>
           <div style={s.cd}>
-            <h3 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Field Location</h3>
-            <p style={{margin:"0 0 14px",fontSize:12,color:k.txM,lineHeight:1.6}}>
+            <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Field Location</h2>
+            <p style={{margin:"0 0 14px",fontSize:14,color:k.txM,lineHeight:1.6}}>
               Your field coordinates are needed to look up soil type (for Enlist product requirements) and check for Pesticide Use Limitation Areas. You can share your location automatically or type coordinates manually.
             </p>
 
@@ -556,14 +560,14 @@ export default function App() {
               <button onClick={useMyLocation} disabled={geoLoading} style={{...s.btn(k.blu,"#fff"),fontSize:14,padding:"10px 24px",opacity:geoLoading?0.6:1,width:"100%"}}>
                 {geoLoading ? "Requesting location..." : geoUsed ? `✓ Location set (${lat}, ${lon}) — Click to refresh` : "📍 Use My Location"}
               </button>
-              {geoError && <div style={{marginTop:8,padding:"8px 12px",background:k.ambBg,borderRadius:6,fontSize:12,color:k.amb}}>{geoError}</div>}
-              {geoUsed && !geoError && <p style={{margin:"8px 0 0",fontSize:12,color:k.grn,fontWeight:600}}>✓ Coordinates set: {lat}°N, {lon}°W</p>}
+              {geoError && <div style={{marginTop:8,padding:"8px 12px",background:k.ambBg,borderRadius:6,fontSize:14,color:k.amb}}>{geoError}</div>}
+              {geoUsed && !geoError && <p style={{margin:"8px 0 0",fontSize:14,color:k.grn,fontWeight:600}}>✓ Coordinates set: {lat}°N, {lon}°W</p>}
             </div>
 
             {/* SECURITY & PRIVACY NOTICE */}
             <div style={{padding:"12px 16px",background:"#faf8f5",borderRadius:8,border:`1px solid ${k.bdr}`,marginBottom:14}}>
-              <h4 style={{margin:"0 0 6px",fontSize:12,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"0.8px"}}>🔒 Privacy & Security — How Your Location Is Handled</h4>
-              <div style={{fontSize:12,color:k.tx,lineHeight:1.7}}>
+              <h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"0.8px"}}>🔒 Privacy & Security — How Your Location Is Handled</h3>
+              <div style={{fontSize:14,color:k.tx,lineHeight:1.7}}>
                 <p style={{margin:"0 0 6px"}}><strong>Your coordinates never leave your device</strong> except for two specific, user-initiated API calls:</p>
                 <p style={{margin:"0 0 4px",paddingLeft:12}}>1. <strong>USDA Soil Data Access</strong> (sdmdataaccess.nrcs.usda.gov) — a U.S. government server that returns soil type data. No personal information is sent, only the point coordinate.</p>
                 <p style={{margin:"0 0 4px",paddingLeft:12}}>2. <strong>EPA BLT Feature Service</strong> (services.arcgis.com) — a U.S. government/Esri server that returns PULA boundaries. Same: only the point coordinate is sent.</p>
@@ -577,55 +581,55 @@ export default function App() {
             </div>
 
             {/* MANUAL COORDINATE ENTRY */}
-            <p style={{margin:"0 0 8px",fontSize:12,fontWeight:600,color:k.txM}}>Or enter coordinates manually:</p>
+            <p style={{margin:"0 0 8px",fontSize:14,fontWeight:600,color:k.txM}}>Or enter coordinates manually:</p>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-              <div><label style={s.lb}>Latitude (°N)</label><input placeholder="e.g. 32.5901" value={lat} onChange={e=>{setLat(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
-              <div><label style={s.lb}>Longitude (°W, use negative)</label><input placeholder="e.g. -85.4944" value={lon} onChange={e=>{setLon(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
+              <div><label htmlFor="lat-input" style={s.lb}>Latitude (°N)</label><input id="lat-input" placeholder="e.g. 32.5901" value={lat} onChange={e=>{setLat(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
+              <div><label htmlFor="lon-input" style={s.lb}>Longitude (°W, use negative)</label><input id="lon-input" placeholder="e.g. -85.4944" value={lon} onChange={e=>{setLon(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
             </div>
           </div>
 
           {/* HSG LOOKUP */}
           <div style={s.cd}>
-            <h3 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Hydrologic Soil Group Lookup</h3>
-            <p style={{margin:"0 0 10px",fontSize:12,color:k.txM,lineHeight:1.6}}>
+            <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Hydrologic Soil Group Lookup</h2>
+            <p style={{margin:"0 0 10px",fontSize:14,color:k.txM,lineHeight:1.6}}>
               <strong>Why this matters:</strong> Enlist One and Enlist Duo require <strong>4 runoff mitigation points on HSG A/B soils</strong> but <strong>6 points on HSG C/D soils</strong>. This queries the USDA Soil Data Access API in real time.
             </p>
-            <p style={{margin:"0 0 12px",fontSize:11,color:k.txM}}>
+            <p style={{margin:"0 0 12px",fontSize:14,color:k.txM}}>
               <strong>API:</strong> USDA NRCS Soil Data Access — sdmdataaccess.nrcs.usda.gov/tabular/post.rest &nbsp;|&nbsp; <strong>Query:</strong> SDA_Get_Mukey_from_intersection_with_WktWgs84() → hydgrpdcd from dominant component
             </p>
             <button onClick={lookupHSG} disabled={hsgLoading||!lat||!lon} style={{...s.btn(k.blu,"#fff"),opacity:(hsgLoading||!lat||!lon)?0.5:1}}>{hsgLoading?"Querying USDA...":"Look Up Soil Group (HSG)"}</button>
-            {!lat&&<span style={{marginLeft:10,fontSize:11,color:k.txM}}>Set your location above first.</span>}
-            {hsgError && <div style={{marginTop:10,padding:"8px 12px",background:k.redBg,borderRadius:6,fontSize:12,color:k.red}}>{hsgError}</div>}
+            {!lat&&<span style={{marginLeft:10,fontSize:14,color:k.txM}}>Set your location above first.</span>}
+            {hsgError && <div style={{marginTop:10,padding:"8px 12px",background:k.redBg,borderRadius:6,fontSize:14,color:k.red}}>{hsgError}</div>}
             {hsgResult && <div style={{marginTop:10,padding:"12px 16px",background:k.grnBg,borderRadius:6,border:`1px solid ${k.grnL}`}}>
               <p style={{margin:0,fontSize:15,fontWeight:700,color:k.grn}}>HSG: {hsgResult}</p>
-              <p style={{margin:"4px 0 0",fontSize:13,color:k.tx}}>
+              <p style={{margin:"4px 0 0",fontSize:14,color:k.tx}}>
                 {["A","B","A/D","B/D"].includes(hsgResult.toUpperCase())
                   ? "→ Enlist products require 4 runoff mitigation points at this location."
                   : "→ Enlist products require 6 runoff mitigation points at this location (HSG C/D tier)."}
               </p>
-              <p style={{margin:"4px 0 0",fontSize:11,color:k.txM}}>Auto-applied to Calculator tab for Enlist products.</p>
+              <p style={{margin:"4px 0 0",fontSize:14,color:k.txM}}>Auto-applied to Calculator tab for Enlist products.</p>
             </div>}
           </div>
 
           {/* PULA CHECK */}
           <div style={s.cd}>
-            <h3 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>PULA Check (Bulletins Live! Two)</h3>
-            <p style={{margin:"0 0 10px",fontSize:12,color:k.txM,lineHeight:1.6}}>
+            <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>PULA Check (Bulletins Live! Two)</h2>
+            <p style={{margin:"0 0 10px",fontSize:14,color:k.txM,lineHeight:1.6}}>
               <strong>Why this matters:</strong> If your field is within a Pesticide Use Limitation Area (PULA), additional mitigation measures beyond the standard label may be required.
             </p>
-            <p style={{margin:"0 0 12px",fontSize:11,color:k.txM}}>
+            <p style={{margin:"0 0 12px",fontSize:14,color:k.txM}}>
               <strong>API:</strong> EPA ArcGIS Feature Service (Item ID: 83c55a9cfea24f18a816b7a5933a7eb5) &nbsp;|&nbsp; Spatial intersection query &nbsp;|&nbsp; <strong>For informational use only — generate official bulletins from EPA BLT for compliance.</strong>
             </p>
             <button onClick={checkPULA} disabled={pulaLoading||!lat||!lon} style={{...s.btn(k.pur,"#fff"),opacity:(pulaLoading||!lat||!lon)?0.5:1}}>{pulaLoading?"Querying EPA...":"Check PULAs at This Location"}</button>
-            {pulaError && <div style={{marginTop:10,padding:"8px 12px",background:k.redBg,borderRadius:6,fontSize:12,color:k.red}}>{pulaError}</div>}
+            {pulaError && <div style={{marginTop:10,padding:"8px 12px",background:k.redBg,borderRadius:6,fontSize:14,color:k.red}}>{pulaError}</div>}
             {pulaResults && <div style={{marginTop:10,padding:"12px 16px",borderRadius:6,background:pulaResults.found?k.ambBg:k.grnBg,border:`1px solid ${pulaResults.found?k.amb:k.grn}33`}}>
               {pulaResults.found ? <>
                 <p style={{margin:0,fontSize:14,fontWeight:700,color:k.amb}}>⚠ {pulaResults.count} PULA{pulaResults.count>1?"s":""} detected at this location</p>
-                <p style={{margin:"6px 0 0",fontSize:12,color:k.tx}}>You <strong>must</strong> generate and follow the official bulletin from EPA's Bulletins Live! Two website before application.</p>
-                <a href="https://www.epa.gov/endangered-species/bulletins-live-two-view-bulletins" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",marginTop:8,...s.btn(k.amb,"#fff"),textDecoration:"none",fontSize:12}}>Open Bulletins Live! Two →</a>
+                <p style={{margin:"6px 0 0",fontSize:14,color:k.tx}}>You <strong>must</strong> generate and follow the official bulletin from EPA's Bulletins Live! Two website before application.</p>
+                <a href="https://www.epa.gov/endangered-species/bulletins-live-two-view-bulletins" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",marginTop:8,...s.btn(k.amb,"#fff"),textDecoration:"none",fontSize:14,display:"inline-flex",alignItems:"center",justifyContent:"center",minHeight:"44px"}}>Open Bulletins Live! Two →</a>
               </> : <>
                 <p style={{margin:0,fontSize:14,fontWeight:700,color:k.grn}}>✓ No PULAs detected at this location</p>
-                <p style={{margin:"4px 0 0",fontSize:12,color:k.txM}}>Informational only. Always verify with EPA's official BLT system — PULA boundaries are updated dynamically.</p>
+                <p style={{margin:"4px 0 0",fontSize:14,color:k.txM}}>Informational only. Always verify with EPA's official BLT system — PULA boundaries are updated dynamically.</p>
               </>}
             </div>}
           </div>
@@ -633,9 +637,9 @@ export default function App() {
 
         {/* ═══ REPORT TAB ═══ */}
         {tab === "report" && (<div style={s.cd}>
-          <h3 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Printable Compliance Report</h3>
-          <p style={{margin:"0 0 6px",fontSize:12,color:k.txM,lineHeight:1.6}}>Generate a printable compliance record documenting your field's ESA mitigation status. <strong>Printing and filing this report with your spray records qualifies for +1 recordkeeping mitigation point</strong> under EPA Mitigation Menu Table 1, Row 4.</p>
-          {(!county||!crop||plan.length===0)?<p style={{fontSize:13,color:k.amb}}>Complete the Calculator tab first (county, crop, spray plan, and practices).</p>:
+          <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Printable Compliance Report</h2>
+          <p style={{margin:"0 0 6px",fontSize:14,color:k.txM,lineHeight:1.6}}>Generate a printable compliance record documenting your field's ESA mitigation status. <strong>Printing and filing this report with your spray records qualifies for +1 recordkeeping mitigation point</strong> under EPA Mitigation Menu Table 1, Row 4.</p>
+          {(!county||!crop||plan.length===0)?<p style={{fontSize:14,color:k.amb}}>Complete the Calculator tab first (county, crop, spray plan, and practices).</p>:
           <button onClick={printReport} style={s.btn(k.acc,"#fff")}>Generate & Print Report</button>}
 
           {/* Hidden report content */}
@@ -660,7 +664,7 @@ export default function App() {
 
         {/* ═══ METHODOLOGY TAB ═══ */}
         {tab === "methods" && (<div style={s.cd}>
-          <h3 style={{margin:"0 0 14px",fontSize:18,fontWeight:800}}>Methodology Documentation</h3>
+          <h2 style={{margin:"0 0 14px",fontSize:18,fontWeight:800}}>Methodology Documentation</h2>
           {[
             {t:"1. Regulatory Framework",b:"EPA's Final Herbicide Strategy (Aug 20, 2024) established a mitigation-points system for runoff/erosion and buffer-based system for spray drift. Implementation is product-by-product during registration/review. As of March 2026, three products carry Herbicide Strategy labels: Liberty ULTRA (7969-500), Enlist One (62719-695), Enlist Duo (62719-649). All remaining herbicides will receive ESA labels over 1–5+ years."},
             {t:"2. County Vulnerability (Limitation 3 addressed)",b:"EPA assigns runoff vulnerability per county using PRZM simulations (Ecological Mitigation Support Document v2.0, Appendix G). Alabama: 30 High (0 pts), 37 Medium (2 pts), 0 Low/Very Low. Source updated Oct 2024. This calculator's county table will be updated when EPA revises classifications (expected annually in fall). Current data version indicator shown in Data Versions tab."},
@@ -669,28 +673,28 @@ export default function App() {
             {t:"5. Runoff Points Algorithm",b:"The calculator implements EPA's 7-step workflow: (1) identify products, (2) check for ESA label language, (3) evaluate field exemptions, (4) find product with highest point requirement, (5) sum relief + practice points, (6) compare earned vs required, (7) verify label/bulletin adherence. Points are additive and field-specific. The maximum-requirement product sets the target; individual product requirements are not summed."},
             {t:"6. Compliance Report (Limitation 4 addressed)",b:"The printable report generator creates a formatted HTML document containing field location, spray plan with EPA Registration Numbers, mitigation points assessment, and application restrictions. Under EPA Mitigation Menu Table 1 Row 4, maintaining paper or electronic records of mitigation practices earns +1 point. Filing this report with spray records satisfies that requirement."},
             {t:"7. Data Currency (Limitation 3 addressed)",b:"All data sources carry version timestamps in the Data Versions tab. The EPA Mitigation Menu is updated annually in fall. ACES IPM Guides are revised annually (December). County vulnerability classifications are static until EPA revises them. The USDA SDA and EPA BLT APIs return real-time data. Users should verify the Data Versions tab before the start of each spray season."},
-          ].map(({t,b})=><div key={t} style={{marginBottom:16}}><h4 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{t}</h4><p style={{margin:0,fontSize:13,color:k.tx,lineHeight:1.7}}>{b}</p></div>)}
+          ].map(({t,b})=><div key={t} style={{marginBottom:16}}><h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{t}</h3><p style={{margin:0,fontSize:14,color:k.tx,lineHeight:1.7}}>{b}</p></div>)}
         </div>)}
 
         {/* ═══ DATA VERSIONS TAB ═══ */}
         {tab === "data" && (<div style={s.cd}>
-          <h3 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Data Source Versions</h3>
-          <p style={{margin:"0 0 14px",fontSize:12,color:k.txM}}>All data in this calculator is traceable to the sources below. Check before each spray season for updates.</p>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-            <thead><tr style={{borderBottom:`2px solid ${k.bdr}`}}>{["Source","Version","Last Updated","Next Update Expected","Link"].map(h=><th key={h} style={{padding:"8px 10px",textAlign:"left",fontWeight:700,color:k.txM,fontSize:11,textTransform:"uppercase"}}>{h}</th>)}</tr></thead>
+          <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Data Source Versions</h2>
+          <p style={{margin:"0 0 14px",fontSize:14,color:k.txM}}>All data in this calculator is traceable to the sources below. Check before each spray season for updates.</p>
+          <table style={{width:"100%",borderCollapse:"collapse",fontSize:14}}>
+            <thead><tr style={{borderBottom:`2px solid ${k.bdr}`}}>{["Source","Version","Last Updated","Next Update Expected","Link"].map(h=><th key={h} style={{padding:"8px 10px",textAlign:"left",fontWeight:700,color:k.txM,fontSize:14,textTransform:"uppercase"}}>{h}</th>)}</tr></thead>
             <tbody>{DATA_VERSIONS.map((d,i)=><tr key={i} style={{borderBottom:`1px solid ${k.bdrL}`}}>
               <td style={{padding:"8px 10px",fontWeight:600}}>{d.src}</td>
               <td style={{padding:"8px 10px"}}>{d.ver}</td>
               <td style={{padding:"8px 10px"}}>{d.date}</td>
               <td style={{padding:"8px 10px",color:k.txM}}>{d.next}</td>
-              <td style={{padding:"8px 10px"}}><a href={d.url} target="_blank" rel="noopener noreferrer" style={{color:k.blu,fontSize:11}}>Source →</a></td>
+              <td style={{padding:"8px 10px"}}><a href={d.url} target="_blank" rel="noopener noreferrer" style={{color:k.blu,fontSize:14,display:"inline-block",padding:"10px",minHeight:"44px",boxSizing:"border-box"}}>Source →</a></td>
             </tr>)}</tbody>
           </table>
         </div>)}
 
         {/* ═══ REFERENCES TAB ═══ */}
         {tab === "refs" && (<div style={s.cd}>
-          <h3 style={{margin:"0 0 14px",fontSize:18,fontWeight:800}}>References</h3>
+          <h2 style={{margin:"0 0 14px",fontSize:18,fontWeight:800}}>References</h2>
           {[
             {c:"Federal Regulatory",r:[
               "U.S. EPA. (2024). Herbicide Strategy. OPP. Aug 20, 2024. Docket: EPA-HQ-OPP-2023-0365.",
@@ -726,13 +730,13 @@ export default function App() {
               "CropLife America. (2026). Adapting to ESA Video Series.",
             ]},
           ].map(({c:cat,r})=><div key={cat} style={{marginBottom:16}}>
-            <h4 style={{margin:"0 0 6px",fontSize:12,fontWeight:700,color:k.acc,textTransform:"uppercase",letterSpacing:"0.5px"}}>{cat}</h4>
-            {r.map((ref,i)=><p key={i} style={{margin:"0 0 4px",fontSize:12,paddingLeft:14,textIndent:-14,lineHeight:1.6}}>{ref}</p>)}
+            <h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,color:k.acc,textTransform:"uppercase",letterSpacing:"0.5px"}}>{cat}</h3>
+            {r.map((ref,i)=><p key={i} style={{margin:"0 0 4px",fontSize:14,paddingLeft:14,textIndent:-14,lineHeight:1.6}}>{ref}</p>)}
           </div>)}
         </div>)}
 
-        <footer style={{textAlign:"center",padding:"20px 0 32px",fontSize:10,color:k.txL,lineHeight:1.8}}>
-          <div style={{display:"inline-block",background:"#03244d",color:"#fff",padding:"3px 14px",borderRadius:4,fontSize:10,fontWeight:600,marginBottom:6}}>Auburn University · War Eagle</div>
+        <footer style={{textAlign:"center",padding:"20px 0 32px",fontSize:14,color:k.txL,lineHeight:1.8}}>
+          <div style={{display:"inline-block",background:"#03244d",color:"#fff",padding:"3px 14px",borderRadius:4,fontSize:14,fontWeight:600,marginBottom:6}}>Auburn University · War Eagle</div>
           <p style={{margin:0}}>Alabama ESA Mitigation Points Calculator v2.1 · Data verified: {LAST_DATA_UPDATE}</p>
           <p style={{margin:0}}>Dept. of Crop, Soil & Environmental Sciences · Alabama Cooperative Extension System · WSSA ESA Committee</p>
           <p style={{margin:0}}>For planning purposes only — the product label is the law · Contact: gzc0063@auburn.edu</p>
@@ -744,8 +748,8 @@ export default function App() {
 
 function MC({l,v,su,co}){
   return <div style={{background:"#f7f5f2",borderRadius:7,padding:"10px 12px",borderLeft:`3px solid ${co}`}}>
-    <div style={{fontSize:10,color:"#847660",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.5px"}}>{l}</div>
+    <div style={{fontSize:14,color:"#847660",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.5px"}}>{l}</div>
     <div style={{fontSize:20,fontWeight:800,color:co,margin:"3px 0 1px"}}>{v}</div>
-    <div style={{fontSize:10,color:"#b0a48e"}}>{su}</div>
+    <div style={{fontSize:14,color:"#b0a48e"}}>{su}</div>
   </div>;
 }
