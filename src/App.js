@@ -279,7 +279,7 @@ export default function App() {
       setHsgError("Coordinates must be within Alabama (Lat 30–35.5, Lon -89 to -84.5)."); return;
     }
     setHsgLoading(true); setHsgError(null); setHsgResult(null);
-    const sql = `SELECT TOP 1 hydgrpdcd FROM mapunit mu
+    const sql = `SELECT TOP 1 hydgrp FROM mapunit mu
       INNER JOIN component co ON co.mukey = mu.mukey
       WHERE mu.mukey IN (
         SELECT * FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('POINT(${lo} ${la})')
@@ -295,7 +295,7 @@ export default function App() {
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
       if (data?.Table?.length > 0) {
-        const hsg = data.Table[0].hydgrpdcd || data.Table[0][Object.keys(data.Table[0])[0]];
+        const hsg = data.Table[0].hydgrp || data.Table[0][Object.keys(data.Table[0])[0]];
         setHsgResult(hsg);
       } else {
         setHsgError("No soil data found at these coordinates. Try a nearby point within a mapped soil polygon.");
@@ -595,7 +595,7 @@ export default function App() {
               <strong>Why this matters:</strong> Enlist One and Enlist Duo require <strong>4 runoff mitigation points on HSG A/B soils</strong> but <strong>6 points on HSG C/D soils</strong>. This queries the USDA Soil Data Access API in real time.
             </p>
             <p style={{margin:"0 0 12px",fontSize:14,color:k.txM}}>
-              <strong>API:</strong> USDA NRCS Soil Data Access — sdmdataaccess.nrcs.usda.gov/tabular/post.rest &nbsp;|&nbsp; <strong>Query:</strong> SDA_Get_Mukey_from_intersection_with_WktWgs84() → hydgrpdcd from dominant component
+              <strong>API:</strong> USDA NRCS Soil Data Access — sdmdataaccess.nrcs.usda.gov/tabular/post.rest &nbsp;|&nbsp; <strong>Query:</strong> SDA_Get_Mukey_from_intersection_with_WktWgs84() → hydgrp from dominant component
             </p>
             <button onClick={lookupHSG} disabled={hsgLoading||!lat||!lon} style={{...s.btn(k.blu,"#fff"),opacity:(hsgLoading||!lat||!lon)?0.5:1}}>{hsgLoading?"Querying USDA...":"Look Up Soil Group (HSG)"}</button>
             {!lat&&<span style={{marginLeft:10,fontSize:14,color:k.txM}}>Set your location above first.</span>}
