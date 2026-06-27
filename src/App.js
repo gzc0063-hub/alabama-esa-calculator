@@ -595,7 +595,7 @@ export default function App() {
               <strong>Why this matters:</strong> Enlist One and Enlist Duo require <strong>4 runoff mitigation points on HSG A/B soils</strong> but <strong>6 points on HSG C/D soils</strong>. This queries the USDA Soil Data Access API in real time.
             </p>
             <p style={{margin:"0 0 12px",fontSize:14,color:k.txM}}>
-              <strong>API:</strong> USDA NRCS Soil Data Access — sdmdataaccess.nrcs.usda.gov/tabular/post.rest &nbsp;|&nbsp; <strong>Query:</strong> SDA_Get_Mukey_from_intersection_with_WktWgs84() → hydgrp from dominant component
+              <strong>API:</strong> USDA NRCS Soil Data Access
             </p>
             <button onClick={lookupHSG} disabled={hsgLoading||!lat||!lon} style={{...s.btn(k.blu,"#fff"),opacity:(hsgLoading||!lat||!lon)?0.5:1}}>{hsgLoading?"Querying USDA...":"Look Up Soil Group (HSG)"}</button>
             {!lat&&<span style={{marginLeft:10,fontSize:14,color:k.txM}}>Set your location above first.</span>}
