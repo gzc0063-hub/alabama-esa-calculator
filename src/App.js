@@ -395,6 +395,13 @@ export default function App() {
         {[["calc","Calculator"],["hsg","HSG & PULA Lookup"],["report","Compliance Report"],["methods","Methodology"],["data","Data Versions"],["refs","References"]].map(([id,lb])=>(
           <button key={id} style={s.tbi(tab===id)} onClick={()=>setTab(id)}>{lb}</button>
         ))}
+        <button
+          style={{...s.tbi(false), display:"inline-flex", alignItems:"center", gap:"6px", color:k.blu}}
+          onClick={()=>window.open("https://gzc0063-hub.github.io/alabama-pesticide-stewardship-advisor/", "_blank", "noopener,noreferrer")}
+          title="Opens in a new tab"
+        >
+          ACES IPM Specialist ↗
+        </button>
       </div>
 
       <div style={{padding:"16px 22px",maxWidth:960,margin:"0 auto"}}>
