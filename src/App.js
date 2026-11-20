@@ -58,8 +58,8 @@ const AL = [
 const HERBS = [
   // ESA-LABELED (active)
   {id:"liberty-ultra",nm:"Liberty ULTRA",ai:"Glufosinate-P-ammonium (L-glufosinate)",grp:"10",mfr:"BASF",reg:"7969-500",cr:["C","S","N"],tm:["POST"],esa:"active",pts:3,ptsCD:null,buf:10,wMax:15,wMin:3,spd:null,drop:"Medium (ASABE S572.1)",blt:true,note:"First herbicide with Herbicide Strategy label (Oct 2024). Resolved isomer of glufosinate — new AI, not same as Liberty 280 SL. Buffer reducible to 0 ft with DRA/hooded sprayer/windbreak. Medium-to-coarse droplets required. Do not apply to saturated soils or during rain. Buffer 10 ft ground, 50 ft aerial.",ref:"EPA Reg. 7969-500 (PPLS); ACES IPM-0415"},
-  {id:"enlist-one",nm:"Enlist One",ai:"2,4-D choline salt",grp:"4",mfr:"Corteva",reg:"62719-695",cr:["C","S","N"],tm:["POST"],esa:"active",pts:4,ptsCD:6,buf:30,wMax:15,wMin:3,wMinAdv:true,spd:null,drop:"XC or UC nozzles only (enlist.com/nozzles)",blt:true,restr:["Do not aerially apply this product (label, Jan 25, 2024).","Enlist trait required for over-the-top use on cotton, soybean and corn.","Do not apply when rainfall is expected within 48 hours or soils are saturated."],note:"Enlist trait required for OTT use on cotton/soybean/corn. 4 credits HSG A/B soils, 6 credits HSG C/D soils. BLT check within 6 months. 30-ft downwind buffer. Wind: do not apply above 15 mph; label recommends 3-10 mph for best results (the 3 mph lower bound is a recommendation, not a ban). No application when rainfall expected within 48 hrs or soils saturated. Registered in 34 states incl. Alabama through Jan 11, 2029. Label uses 'credits' (functionally = points).",ref:"EPA Reg. 62719-695; EPA-accepted label Jan 25, 2024 (PPLS); EPA registration page"},
-  {id:"enlist-duo",nm:"Enlist Duo",ai:"2,4-D choline salt + Glyphosate dimethylammonium salt",grp:"4+9",mfr:"Corteva",reg:"62719-649",cr:["C","S","N"],tm:["POST"],esa:"active",pts:4,ptsCD:6,buf:30,wMax:15,wMin:3,wMinAdv:true,spd:null,drop:"XC or UC nozzles only (enlist.com/nozzles)",blt:true,restr:["Do not aerially apply this product (label, Jan 25, 2024).","Enlist trait required for over-the-top use.","Cotton: do not apply after first white bloom. Soybean: apply through R1, do not apply after R1.","Tank-mix only with products tested and listed at Enlist.com/TankMix."],note:"Same ESA requirements as Enlist One. Wind: do not apply above 15 mph; label recommends 3-10 mph for best results (the 3 mph lower bound is a recommendation, not a ban). Enlist trait required. Tank-mix only with products tested and listed at Enlist.com/TankMix; avoid more than 2 in-crop applications of Enlist Duo plus any other Group 4 or 9 herbicide per season unless mixed with another mode of action. Cotton: do not apply after first white bloom. Soybean: apply through R1, do not apply after R1.",ref:"EPA Reg. 62719-649; EPA-accepted label, specimen rev. June 24, 2024 (PPLS); ACES IPM-0413"},
+  {id:"enlist-one",nm:"Enlist One",ai:"2,4-D choline salt",grp:"4",mfr:"Corteva",reg:"62719-695",cr:["C","S","N"],tm:["POST"],esa:"active",pts:4,ptsCD:6,buf:30,wMax:15,wMin:3,wMinAdv:true,spd:null,drop:"XC or UC nozzles only (enlist.com/nozzles)",blt:true,restr:["Do not aerially apply this product (label, Jan 25, 2024).","Enlist trait required for over-the-top use on cotton, soybean and corn.","Do not apply when rainfall is expected within 48 hours or soils are saturated."],note:"Enlist trait required for OTT use on cotton/soybean/corn. 4 credits HSG A/B soils, 6 credits HSG C/D soils. BLT check within 6 months. 30-ft downwind buffer. Wind: do not apply above 15 mph; label recommends 3-10 mph for best results (the 3 mph lower bound is a recommendation, not a ban). No application when rainfall expected within 48 hrs or soils saturated. Registered in 34 states incl. Alabama through Jan 11, 2029. Label uses its own credit table, not Menu points — see Methodology §7.",ref:"EPA Reg. 62719-695; EPA-accepted label Jan 25, 2024 (PPLS); EPA registration page"},
+  {id:"enlist-duo",nm:"Enlist Duo",ai:"2,4-D choline salt + Glyphosate dimethylammonium salt",grp:"4+9",mfr:"Corteva",reg:"62719-649",cr:["C","S","N"],tm:["POST"],esa:"active",pts:4,ptsCD:6,buf:30,wMax:15,wMin:3,wMinAdv:true,spd:null,drop:"XC or UC nozzles only (enlist.com/nozzles)",blt:true,restr:["Do not aerially apply this product (label, Jan 25, 2024).","Enlist trait required for over-the-top use.","Cotton: do not apply after first white bloom. Soybean: apply through R1, do not apply after R1.","Tank-mix only with products tested and listed at Enlist.com/TankMix."],note:"Same ESA requirements as Enlist One. Wind: do not apply above 15 mph; label recommends 3-10 mph for best results (the 3 mph lower bound is a recommendation, not a ban). Enlist trait required. Tank-mix only with products tested and listed at Enlist.com/TankMix; avoid more than 2 in-crop applications of Enlist Duo plus any other Group 4 or 9 herbicide per season unless mixed with another mode of action. Cotton: do not apply after first white bloom. Soybean: apply through R1, do not apply after R1.",ref:"EPA Reg. 62719-649; EPA label Jan 25, 2024 (PPLS); ACES IPM-0413"},
   {id:"engenia",nm:"Engenia",ai:"Dicamba (BAPMA salt)",grp:"4",mfr:"BASF",reg:"7969-507",cr:["C","S"],tm:["POST"],esa:"active",pts:3,ptsCD:null,ptsPULA:6,buf:240,wMax:10,wMin:3,spd:15,blt:true,restr:["Qualified VRA must be tank-mixed with every application (Feb 6, 2026 registration terms).","Temperature: do not apply if the forecast high is 95°F or above on the day of or day after treatment; if 85°F to below 95°F, apply to no more than 50% of your dicamba-tolerant soybean and cotton acres in the county.","Growth stage: do not apply after R1 in soybean — maximum two applications of 0.5 lb a.e./A each.","Annual dicamba-specific training is mandatory in Alabama.","Sandy soils: do not apply to sand soils with less than 3% organic matter where groundwater is shallow.","Restricted Use pesticide; registration expires Feb 6, 2028."],note:"Over-the-top dicamba, EPA-registered Feb 2026 for the 2026–2027 seasons only (label dated Feb 6, 2026); registration expires Feb 6, 2028 and is under legal challenge. Restricted Use. Minimum 3 runoff/erosion mitigation points outside a PULA, 6 points inside a PULA. Drift buffer up to 240 ft. 1 lb dicamba per season cap; temperature cutoffs apply. Wind 3-10 mph; ground speed max 15 mph. Label: do not apply to sand soils with less than 3% organic matter where groundwater is shallow. Approved in Alabama for 2026–2027. See the label and BLT bulletin before every application.",ref:"EPA Reg. 7969-507; EPA label Feb 6, 2026 (PPLS); Auburn Extension May 13, 2026"},
   {id:"stryax",nm:"Stryax",ai:"Dicamba (diglycolamine salt)",grp:"4",mfr:"Bayer",reg:"264-1241",cr:["C","S"],tm:["POST"],esa:"active",pts:3,ptsCD:null,ptsPULA:6,buf:240,wMax:10,wMin:3,spd:15,blt:true,restr:["Qualified VRA must be tank-mixed with every application (Feb 6, 2026 registration terms).","Temperature: do not apply if the forecast high is 95°F or above on the day of or day after treatment; if 85°F to below 95°F, apply to no more than 50% of your dicamba-tolerant soybean and cotton acres in the county.","Growth stage: do not apply after R1 in soybean — maximum two applications of 0.5 lb a.e./A each.","Annual dicamba-specific training is mandatory in Alabama.","Sandy soils: do not apply to sand soils with less than 3% organic matter where groundwater is shallow.","Restricted Use pesticide; registration expires Feb 6, 2028."],note:"Over-the-top dicamba (replacement for XtendiMax), EPA-registered Feb 2026 for the 2026–2027 seasons only (label dated Feb 6, 2026); registration expires Feb 6, 2028 and is under legal challenge. Restricted Use. Minimum 3 runoff/erosion mitigation points outside a PULA, 6 points inside a PULA. Drift buffer up to 240 ft. 1 lb dicamba per season cap; temperature cutoffs apply. Wind 3-10 mph; ground speed max 15 mph. Label: do not apply to sand soils with less than 3% organic matter where groundwater is shallow. Approved in Alabama for 2026–2027. See the label and BLT bulletin before every application.",ref:"EPA Reg. 264-1241; EPA label Feb 6, 2026 (PPLS); Auburn Extension May 13, 2026"},
   {id:"tavium",nm:"Tavium Plus VaporGrip Technology",ai:"Dicamba (diglycolamine salt) + S-metolachlor",grp:"4+15",mfr:"Syngenta",reg:"100-1753",cr:["C","S"],tm:["POST"],esa:"active",pts:3,ptsCD:null,ptsPULA:6,buf:240,wMax:10,wMin:3,spd:15,blt:true,restr:["Qualified VRA must be tank-mixed with every application (Feb 6, 2026 registration terms).","Temperature: do not apply if the forecast high is 95°F or above on the day of or day after treatment; if 85°F to below 95°F, apply to no more than 50% of your dicamba-tolerant soybean and cotton acres in the county.","Growth stage: do not apply after V4 in soybean. The June 12 cutoffs on the label are state-specific — Iowa, Indiana, and Minnesota south of I-94 — not Alabama.","Annual dicamba-specific training is mandatory in Alabama.","Sandy soils: do not use on sand or loamy sand soils; no more than one application on coarse-textured soils.","Restricted Use pesticide; registration expires Feb 6, 2028."],note:"Over-the-top dicamba + S-metolachlor premix, EPA-registered Feb 2026 for the 2026–2027 seasons only (label dated Feb 6, 2026); registration expires Feb 6, 2028 and is under legal challenge. Restricted Use. Minimum 3 runoff/erosion mitigation points outside a PULA, 6 points inside a PULA. Drift buffer up to 240 ft. 1 lb dicamba per season cap; temperature cutoffs apply. Wind 3-10 mph; ground speed max 15 mph. Label: do not use on sand or loamy sand soils; no more than one application on coarse-textured soils. Approved in Alabama for 2026–2027. See the label and BLT bulletin before every application.",ref:"EPA Reg. 100-1753; EPA label Feb 6, 2026 (PPLS); Auburn Extension May 13, 2026"},
@@ -168,6 +168,28 @@ const PRACT = [
   {id:"sed",nm:"Sediment basin / retention pond",pts:2,cat:"system",bcat:"system",d:"Basin capturing and holding runoff before release.",ref:"EPA Mitigation Menu Table 2, Water retention systems (2 pts); NRCS CPS 350"},
   {id:"subdrain",nm:"Subsurface drainage without controlled drainage structure",pts:1,cat:"system",bcat:"system",d:"Subsurface tile drains installed without a controlled drainage structure. EPA Mitigation Menu Table 2, Subsurface drainages and tile drainage installed without controlled drainage structure. Note: tile drains WITH a water control structure and controlled outlet are a Step 3 exemption (no additional mitigation needed), not this practice — do not claim both.",ref:"EPA Mitigation Menu Table 2, Subsurface drainages and tile drainage installed without controlled drainage structure"},
 ];
+
+// ─── ENLIST CREDIT TABLE (Fix 7) ───
+// Enlist One/Duo label credit table, Jan 25, 2024, "Management of Runoff"
+// (PPLS 062719-00695-20240125 and 062719-00649-20240125).
+// HSG A/B require 4 credits, HSG C/D require 6. County relief, the
+// multi-category bonus, and every practice not listed here earn 0 Enlist
+// credits. "hsg" = value depends on HSG: A/B 2, C/D 0 (30 ft VFS tier).
+// The applications row (1 app 4, 2 apps 2, 3 apps 0) and the 100 ft VFS
+// tier are NOT modelled (spec Q1/Q2) — the tool says so on screen.
+const ENLIST_CREDITS = {
+  notill: 4, redtill: 4,       // Residue Tillage Management (single row)
+  cc: 2, ccnt: 2, ccshort: 2, // Cover Crop (single row, 2 flat)
+  vfs30: "hsg", vfs60: "hsg", // VFS 30 ft tier (vfs60 counted as 30 ft, spec Q4)
+  fb: 2,                      // Field border
+  gww: 2,                     // Grassed Waterway
+  sed: 1,                     // Water and Sediment Basin (Menu gives 2; Enlist gives 1)
+  terr: 2,                    // Contour Buffer Strips or Terrace
+  contour: 1,                 // Contour Farming or Contour Strip Cropping
+  // vfs10 (20-30 ft) earns 0: Enlist's tier needs a 30 ft minimum (spec Q3).
+  // infstrip earns 0: the app's practice is broader than the label's
+  // Vegetative Barrier row (spec Q5).
+};
 
 // ─── DATA VERSION REGISTRY ───
 const DATA_VERSIONS = [
@@ -409,8 +431,31 @@ export default function App() {
     PRACT.filter(p => prac.includes(p.id)).forEach(p => { t += p.pts; });
     return Math.min(9, t);
   }, [prac, ctyRel, multiBonus]);
-  const deficit = Math.max(0, maxReq - earned);
-  const ok = plan.length > 0 && maxReq > 0 && deficit === 0;
+  // Fix 7: Enlist One/Duo use their own label credit table (Jan 25, 2024),
+  // not Menu points. County relief and the multi-category bonus never count
+  // toward Enlist credits, and only the practices in ENLIST_CREDITS count.
+  const enlistCr = useCallback((pr) => {
+    const v = ENLIST_CREDITS[pr.id];
+    if (v == null) return 0;
+    if (v === "hsg") {
+      if (!hsgLetter) return 0; // unknown HSG: conservative (lower) value
+      return ["A", "B"].includes(hsgLetter) ? 2 : 0;
+    }
+    return v;
+  }, [hsgLetter]);
+  const menuReq = useMemo(() => {
+    const others = plan.filter(h => h.esa === "active" && h.id !== "enlist-one" && h.id !== "enlist-duo");
+    return others.length ? Math.max(...others.map(h => getHerbPts(h))) : 0;
+  }, [plan, getHerbPts]);
+  const enlistReq = useMemo(() => {
+    const e = plan.find(h => h.id === "enlist-one" || h.id === "enlist-duo");
+    return e ? getHerbPts(e) : 0;
+  }, [plan, getHerbPts]);
+  const earnedEnlist = useMemo(() => PRACT.filter(pr => prac.includes(pr.id)).reduce((t, pr) => t + enlistCr(pr), 0), [prac, enlistCr]);
+  const menuDeficit = Math.max(0, menuReq - earned);
+  const enlistDeficit = Math.max(0, enlistReq - earnedEnlist);
+  const deficit = Math.max(menuDeficit, enlistDeficit);
+  const ok = plan.length > 0 && maxReq > 0 && menuDeficit === 0 && enlistDeficit === 0;
   const esaN = plan.filter(h => h.esa === "active").length;
   const maxBuf = useMemo(() => plan.length ? Math.max(...plan.map(h => h.buf || 0)) : 0, [plan]);
   const sWind = useMemo(() => { const v = plan.map(h => h.wMax).filter(Boolean); return v.length ? Math.min(...v) : null; }, [plan]);
@@ -647,7 +692,7 @@ export default function App() {
                       <div style={{display:"flex",gap:4,marginTop:5,flexWrap:"wrap"}}>
                         {h.esa==="active"?<>
                           <span style={s.tg(k.redBg,k.red)}>ESA Active</span>
-                          <span style={s.tg(k.ambBg,k.amb)}>Runoff: {hp} pts{h.ptsCD&&hsgResult?` (HSG ${hsgResult})`:h.ptsCD?" (HSG unknown—using C/D)":""}{pulaResults?.found&&h.ptsPULA!=null?" (inside PULA)":""}</span>
+                          <span style={s.tg(k.ambBg,k.amb)}>Runoff: {hp} {h.ptsCD?"credits":"pts"}{h.ptsCD&&hsgResult?` (HSG ${hsgResult})`:h.ptsCD?" (HSG unknown—using C/D)":""}{pulaResults?.found&&h.ptsPULA!=null?" (inside PULA)":""}</span>
                           <span style={s.tg(k.bluBg,k.blu)}>Buffer: {h.buf} ft</span>
                           {h.blt&&<span style={s.tg(k.purBg,k.pur)}>BLT Required</span>}
                         </>:<>
@@ -688,14 +733,24 @@ export default function App() {
             <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 3 — Mitigation Points</h2>
             <div style={{padding:"12px 16px",borderRadius:7,border:`2px solid ${ok?k.grn:k.amb}`,background:ok?k.grnBg:k.bg,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Earned / Required</span>
-                <span style={{fontSize:24,fontWeight:800,color:ok?k.grn:k.amb}}>{earned} / {maxReq}</span>
+                <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Menu points — Earned / Required</span>
+                <span style={{fontSize:24,fontWeight:800,color:menuDeficit===0?k.grn:k.amb}}>{menuReq>0?`${earned} / ${menuReq}`:"none required"}</span>
               </div>
-              <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden"}}>
-                <div style={{height:"100%",width:`${Math.min(100,maxReq>0?(earned/maxReq)*100:0)}%`,background:ok?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
+              <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden",marginBottom:enlistInPlan?10:0}}>
+                <div style={{height:"100%",width:`${Math.min(100,menuReq>0?(earned/menuReq)*100:0)}%`,background:menuDeficit===0?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
               </div>
+              {enlistInPlan&&<>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                  <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Enlist credits — Earned / Required</span>
+                  <span style={{fontSize:24,fontWeight:800,color:enlistDeficit===0?k.grn:k.amb}}>{earnedEnlist} / {enlistReq}</span>
+                </div>
+                <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:`${Math.min(100,enlistReq>0?(earnedEnlist/enlistReq)*100:0)}%`,background:enlistDeficit===0?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
+                </div>
+                <p style={{margin:"6px 0 0",fontSize:13,color:k.txM,lineHeight:1.5}}>Enlist One/Duo use their own label credit table, not Menu points. County relief and the multi-category bonus do not count toward Enlist credits. This tool does not count the label's applications row (1 application = 4 credits) or the 100 ft filter-strip tier — check the label.</p>
+              </>}
               <p style={{margin:"6px 0 0",fontSize:14,fontWeight:600,color:ok?k.grn:k.amb}}>
-                {ok?"✓ Points requirement met — label restrictions not checked":`${deficit} more pt${deficit!==1?"s":""} needed — ${county} County`}
+                {ok?"✓ Points requirement met — label restrictions not checked":`${menuDeficit>0?`Menu points short by ${menuDeficit} — ${earned} of ${menuReq}. `:""}${enlistDeficit>0?`Enlist credits short by ${enlistDeficit} — ${earnedEnlist} of ${enlistReq}. `:""}${county} County`}
               </p>
             </div>
 
@@ -729,7 +784,10 @@ export default function App() {
                   return <div key={p.id} onClick={()=>{ if (!dis) togP(p.id); }} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 10px",minHeight:"44px",borderRadius:6,cursor:dis?"not-allowed":"pointer",opacity:dis?0.55:1,background:a?k.grnBg:"transparent",border:`1px solid ${a?k.grnL:"transparent"}`,marginBottom:3}}>
                     <div style={{width:18,height:18,borderRadius:4,border:`2px solid ${a?k.grn:k.bdr}`,background:a?k.grn:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"#fff",fontWeight:800,flexShrink:0,marginTop:1}}>{a&&"✓"}</div>
                     <div style={{flex:1}}><div style={{fontSize:14,fontWeight:600,color:a?k.tx:k.txM}}>{p.nm}</div><div style={{fontSize:14,color:k.txM,marginTop:1}}>{p.d}</div>{dis && <div style={{fontSize:13,color:k.amb,marginTop:3,fontWeight:600}}>{dis}</div>}</div>
-                    <span style={{...s.tg(k.ambBg,k.amb),fontWeight:800,flexShrink:0}}>+{p.pts}</span>
+                    <span style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3,flexShrink:0}}>
+                      <span style={{...s.tg(k.ambBg,k.amb),fontWeight:800}}>+{p.pts}</span>
+                      {enlistInPlan&&<span style={{...s.tg(k.purBg,k.pur),fontWeight:800}}>+{enlistCr(p)} Enlist</span>}
+                    </span>
                   </div>;
                 })}
               </div>
@@ -782,7 +840,7 @@ export default function App() {
           <div style={s.cd}>
             <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Hydrologic Soil Group Lookup</h2>
             <p style={{margin:"0 0 10px",fontSize:14,color:k.txM,lineHeight:1.6}}>
-              <strong>Why this matters:</strong> Enlist One and Enlist Duo require <strong>4 runoff mitigation points on HSG A/B soils</strong> but <strong>6 points on HSG C/D soils</strong>. This queries the USDA Soil Data Access API in real time.
+              <strong>Why this matters:</strong> Enlist One and Enlist Duo require <strong>4 runoff mitigation credits on HSG A/B soils</strong> but <strong>6 credits on HSG C/D soils</strong> (their own label credit table — see Methodology §7). This queries the USDA Soil Data Access API in real time.
             </p>
             <p style={{margin:"0 0 12px",fontSize:14,color:k.txM}}>
               <strong>API:</strong> USDA NRCS Soil Data Access — sdmdataaccess.nrcs.usda.gov/tabular/post.rest &nbsp;|&nbsp; <strong>Query:</strong> SDA_Get_Mukey_from_intersection_with_WktWgs84() → hydgrp from dominant component
@@ -842,13 +900,15 @@ export default function App() {
             <table><thead><tr><th>Product</th><th>AI</th><th>Group</th><th>EPA Reg.</th><th>ESA Status</th><th>Runoff Pts</th><th>Drift Buffer</th></tr></thead>
             <tbody>{plan.map(h=><tr key={h.id}><td>{h.nm}</td><td>{h.ai}</td><td>{h.grp}</td><td>{h.reg}</td><td>{h.esa==="active"?"ACTIVE":"Pending"}</td><td>{h.esa==="active"?getHerbPts(h):"N/A"}</td><td>{h.esa==="active"?`${h.buf} ft`:"N/A"}</td></tr>)}</tbody></table>
             <h2>Mitigation Points Assessment</h2>
-            <p><strong>Maximum required:</strong> {maxReq} points &nbsp;|&nbsp; <strong>Earned:</strong> {earned} points &nbsp;|&nbsp; <strong>Status:</strong> <span className={ok?"pass":"fail"}>{ok?"Points requirement met — label restrictions not checked":"Points shortfall: "+deficit+" pts"}</span></p>
+            <p><strong>Menu points — Maximum required:</strong> {menuReq} points &nbsp;|&nbsp; <strong>Earned:</strong> {earned} points</p>
+            {enlistInPlan&&<p><strong>Enlist credits — Required:</strong> {enlistReq} credits &nbsp;|&nbsp; <strong>Earned:</strong> {earnedEnlist} credits &nbsp;|&nbsp; <em>Enlist One/Duo use their own label credit table; county relief and the multi-category bonus do not count toward Enlist credits.</em></p>}
+            <p><strong>Status:</strong> <span className={ok?"pass":"fail"}>{ok?"Points requirement met — label restrictions not checked":`Points shortfall: ${menuDeficit>0?`Menu ${menuDeficit} pts. `:""}${enlistDeficit>0?`Enlist ${enlistDeficit} credits. `:""}`}</span></p>
             <p>This verdict covers runoff/erosion points only. It does not check the label restrictions listed below.</p>
-            <table><thead><tr><th>Practice</th><th>Points</th><th>Applied</th></tr></thead>
+            <table><thead><tr><th>Practice</th><th>Points</th>{enlistInPlan&&<th>Enlist Cr</th>}<th>Applied</th></tr></thead>
             <tbody>
-              <tr><td>County vulnerability relief ({county})</td><td>{ctyRel}</td><td>Auto</td></tr>
-              {PRACT.filter(p=>prac.includes(p.id)).map(p=><tr key={p.id}><td>{p.nm}</td><td>{p.pts}</td><td>Yes</td></tr>)}
-              {multiBonus===1&&<tr><td>Multi-category bonus (practices from 2+ categories, EPA Mitigation Menu Table 2)</td><td>1</td><td>Yes</td></tr>}
+              <tr><td>County vulnerability relief ({county})</td><td>{ctyRel}</td>{enlistInPlan&&<td>0</td>}<td>Auto</td></tr>
+              {PRACT.filter(p=>prac.includes(p.id)).map(p=><tr key={p.id}><td>{p.nm}</td><td>{p.pts}</td>{enlistInPlan&&<td>{enlistCr(p)}</td>}<td>Yes</td></tr>)}
+              {multiBonus===1&&<tr><td>Multi-category bonus (practices from 2+ categories, EPA Mitigation Menu Table 2)</td><td>1</td>{enlistInPlan&&<td>0</td>}<td>Yes</td></tr>}
             </tbody></table>
             <h2>Application Restrictions</h2>
             <p>Max drift buffer: {maxBuf} ft &nbsp;|&nbsp; {sWind ? `Wind: ${windText}${windMinAdv?" (lower bound advisory for Enlist)":""}` : "Wind: Not modelled — check label"} &nbsp;|&nbsp; {sSpd?`Max speed: ${sSpd} mph`:"Max speed: Not modelled — check label"}</p>
@@ -867,9 +927,10 @@ export default function App() {
             {t:"2. County Vulnerability (Limitation 3 addressed)",b:"EPA assigns runoff vulnerability per county using Pesticide Water Calculator (PWC) scenarios (Ecological Mitigation Support Document, Appendix G in v1.0, July 2024). Alabama: 30 High (0 pts), 37 Medium (2 pts), 0 Low/Very Low. Source updated Oct 2024. This calculator's county table will be updated when EPA revises classifications; EPA publishes no revision schedule for the county list. Current data version indicator shown in Data Versions tab."},
             {t:"3. HSG Integration (Limitation 1 RESOLVED)",b:"Enlist products use a tiered point system: 4 points for Hydrologic Soil Group A or B; 6 points for HSG C or D. This version queries USDA's Soil Data Access REST API (sdmdataaccess.nrcs.usda.gov/tabular/post.rest) using SDA_Get_Mukey_from_intersection_with_WktWgs84() to retrieve the dominant component's hydgrp at user-supplied coordinates. The result auto-adjusts Enlist product requirements in the Calculator tab. Dual/undrained groups (e.g., A/D, B/D) are resolved to the drained classification; this assumes the soil can be adequately drained — where drainage is uncertain, use the more limiting (higher-letter) group."},
             {t:"4. PULA Integration (Limitation 2 RESOLVED)",b:"EPA publishes PULA polygons as an ArcGIS Map Service (Item ID: 83c55a9cfea24f18a816b7a5933a7eb5). This version queries layer 0 (\"Effective Pulas\") of the BLT Pesticide Use Limitation Areas MapServer at blt.epa.gov/arcgis/rest/services/BLT/PesticideUsageLimitationAreas/MapServer, with an esriGeometryPoint spatial intersection to detect PULAs at user coordinates. A PULA hit raises the requirement to 6 points for dicamba products and 3 points for Empera; with no PULA result the tool says so plainly instead of assuming the field is outside a PULA. Results are informational — official compliance requires generating bulletins from EPA's Bulletins Live! Two system. The BLT REST API (epa.gov/endangered-species/public-rest-api-bulletins) provides product-specific bulletin data in JSON format."},
-            {t:"5. Runoff Points Algorithm",b:"The calculator implements EPA's 7-step workflow: (1) identify products, (2) check for ESA label language, (3) evaluate field exemptions, (4) find product with highest point requirement, (5) sum relief + practice points, (6) compare earned vs required, (7) verify label/bulletin adherence. Points are additive and field-specific, except where EPA marks a Mitigation Menu row 'Select one option' — only one option in such a row may be claimed (conservation tillage, cover crop, VFS/field border, riparian area, sandy soils, rate reduction, proportion treated, irrigation, mulching, terrestrial habitat, filtering devices, technical specialist / non-qualified program), and the earned total is capped at 9 points, the maximum any label can require. The maximum-requirement product sets the target; individual product requirements are not summed. Multi-category bonus: +1 point when selected practices come from at least two of in-field, field-adjacent, or systems that capture runoff and discharge (EPA Mitigation Menu Table 2). All Table 1 relief rows and all Table 2 rows are now selectable, including application parameters (rate reduction, PAM, proportion treated, soil incorporation), short-term cover crop, in-field vegetative strips, irrigation management, mulching, erosion barriers, riparian and terrestrial habitat tiers, filtering devices, and subsurface drainage without a controlled drainage structure. The verdict covers runoff/erosion points only: label restrictions (qualified VRA, temperature and growth-stage cutoffs, aerial bans, annual dicamba training) are listed separately in the Calculator tab and the print report and are not checked by the tool."},
+            {t:"5. Runoff Points Algorithm",b:"The calculator implements EPA's 7-step workflow: (1) identify products, (2) check for ESA label language, (3) evaluate field exemptions, (4) find product with highest point requirement, (5) sum relief + practice points, (6) compare earned vs required, (7) verify label/bulletin adherence. Points are additive and field-specific, except where EPA marks a Mitigation Menu row 'Select one option' — only one option in such a row may be claimed (conservation tillage, cover crop, VFS/field border, riparian area, sandy soils, rate reduction, proportion treated, irrigation, mulching, terrestrial habitat, filtering devices, technical specialist / non-qualified program), and the earned total is capped at 9 points, the maximum any label can require. The maximum-requirement product sets the target; individual product requirements are not summed. Multi-category bonus: +1 point when selected practices come from at least two of in-field, field-adjacent, or systems that capture runoff and discharge (EPA Mitigation Menu Table 2). All Table 1 relief rows and all Table 2 rows are now selectable, including application parameters (rate reduction, PAM, proportion treated, soil incorporation), short-term cover crop, in-field vegetative strips, irrigation management, mulching, erosion barriers, riparian and terrestrial habitat tiers, filtering devices, and subsurface drainage without a controlled drainage structure. The verdict covers runoff/erosion points only: label restrictions (qualified VRA, temperature and growth-stage cutoffs, aerial bans, annual dicamba training) are listed separately in the Calculator tab and the print report and are not checked by the tool. Exception: Enlist One/Duo use their own credit table (see §7) — when Enlist is in the plan, the Menu requirement and the Enlist requirement are tracked separately and both must be met."},
+            {t:"7. Enlist One/Duo — Their Own Credit Table",b:"Enlist One (62719-695) and Enlist Duo (62719-649), labels dated Jan 25, 2024, 'Management of Runoff' section, use their own runoff credit table — not the EPA Mitigation Menu points. HSG A/B require 4 credits, HSG C/D require 6 (6 is the conservative default when no HSG lookup has run). Credits come only from the label's table: residue tillage (no-till, strip-till, ridge-till, mulch-till) 4; cover crop 2; field border 2; vegetative barrier 2; contour buffer strips or terrace 2; grassed waterway 2; water and sediment basin 1; contour farming or contour strip cropping 1; vegetative filter strips 30 ft (HSG A/B 2, C/D 0) and 100 ft (A/B 4, C/D 1); fewer applications (1 application 4, 2 applications 2, 3 applications 0). County relief and the multi-category bonus do not count toward Enlist credits, and no other Menu practice counts. This tool does not count the applications row or the 100 ft filter-strip tier and says so on screen when Enlist is in the plan; a 20–30 ft filter strip earns 0 Enlist credits because the label's tier needs a 30 ft minimum, and a 60 ft or wider strip is counted as the 30 ft tier. A PULA hit does not change the Enlist requirement; the BLT bulletin governs separately. The label also requires meeting the minimum criteria on Enlist.com/mitigationmeasures to receive credits — the tool states this but does not verify it."},
             {t:"6. Compliance Report (Limitation 4 addressed)",b:"The printable report generator creates a formatted HTML document containing field location, spray plan with EPA Registration Numbers, mitigation points assessment, and application restrictions. Under EPA Mitigation Menu Table 1 (Mitigation tracking), a grower/applicator who tracks the mitigations employed on paper or in electronic format, documented at the field or farm level, earns +1 point. Filing this report with spray records can serve as that tracking record, provided the listed measures are actually in place; printing alone, without maintaining the record, does not earn the point."},
-            {t:"7. Data Currency (Limitation 3 addressed)",b:"All data sources carry version timestamps in the Data Versions tab. The EPA Mitigation Menu is updated annually in fall. ACES IPM Guides are revised annually (December). County vulnerability classifications are static until EPA revises them. The USDA SDA and EPA BLT APIs return real-time data. Users should verify the Data Versions tab before the start of each spray season."},
+            {t:"8. Data Currency (Limitation 3 addressed)",b:"All data sources carry version timestamps in the Data Versions tab. The EPA Mitigation Menu is updated annually in fall. ACES IPM Guides are revised annually (December). County vulnerability classifications are static until EPA revises them. The USDA SDA and EPA BLT APIs return real-time data. Users should verify the Data Versions tab before the start of each spray season."},
           ].map(({t,b})=><div key={t} style={{marginBottom:16}}><h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{t}</h3><p style={{margin:0,fontSize:14,color:k.tx,lineHeight:1.7}}>{b}</p></div>)}
         </div>)}
 
