@@ -573,48 +573,34 @@ export default function App() {
     inp:{width:"100%",boxSizing:"border-box",padding:"9px 12px",minHeight:"44px",borderRadius:6,border:`1px solid ${k.bdr}`,fontSize:14,fontFamily:f,color:k.tx,background:k.bg,outline:"none"},
     btn:(bg,fg)=>({padding:"7px 16px",minHeight:"44px",minWidth:"44px",borderRadius:6,border:"none",background:bg,color:fg,fontSize:14,fontWeight:700,cursor:"pointer"}),
     tg:(bg,fg)=>({display:"inline-flex",alignItems:"center",padding:"2px 9px",borderRadius:4,background:bg,color:fg,fontSize:14,fontWeight:600,whiteSpace:"nowrap"}),
-    tb:{display:"flex",gap:0,borderBottom:`2px solid ${k.bdr}`,background:k.card},
+    tb:{display:"flex",flexWrap:"wrap",gap:0,borderBottom:`2px solid ${k.bdr}`,background:k.card},
     tbi:a=>({padding:"10px 20px",minHeight:"44px",fontSize:14,fontWeight:a?700:500,color:a?k.acc:k.txM,borderBottom:a?`3px solid ${k.acc}`:"3px solid transparent",cursor:"pointer",background:"transparent",border:"none",marginBottom:"-2px"}),
   };
 
   return (
     <div style={s.pg}>
-      <div style={{background:"#FFF3CD",borderBottom:"2px solid #E0A800",padding:"8px 22px",fontSize:13,lineHeight:1.5,color:"#664D03"}}>
-        <strong>Disclaimer:</strong> Personal research and learning prototype. Not an official Auburn University, EPA, or regulatory tool and not a substitute for current EPA guidance, Bulletins Live! Two, or the pesticide label. Verify all requirements before use.
-      </div>
       <div style={{...s.hd,background:"linear-gradient(135deg, #234434 0%, #162e1f 100%)",borderBottom:"4px solid #1f5c2e"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8}}>
           <div>
             <h1 style={{margin:0,fontSize:20,fontWeight:800,color:"#ffffff",letterSpacing:"-0.3px"}}>Alabama ESA Mitigation Points Calculator <span style={{fontSize:14,fontWeight:500,color:"#cdd6e4"}}>v2.1</span></h1>
-            <p style={{margin:"3px 0 0",fontSize:14,color:"#cdd6e4"}}>Cotton · Soybean · Peanut · Corn &nbsp;|&nbsp; EPA Herbicide Strategy (Aug 2024)</p>
-            <p style={{margin:"2px 0 0",fontSize:14,color:"#cdd6e4"}}>{LABEL_COVERAGE_NOTE}</p>
-            <p style={{margin:"2px 0 0",fontSize:14,color:"#a6b5c9"}}>Gourav Chahal, PhD Student · Advisors: Dr. Andrew Price & Dr. David Russell</p>
+            <p style={{margin:"8px 0 0",fontSize:15,color:"#ffffff",lineHeight:1.6}}>Estimate runoff mitigation points and Enlist credits for Alabama cotton, soybean, peanut and corn fields.</p>
+            <p style={{margin:"4px 0 0",fontSize:14,color:"#cdd6e4",lineHeight:1.6}}>Choose your county and crop, add your herbicides, then select the practices used on your field.</p>
+            <p style={{margin:"8px 0 0",fontSize:14,fontWeight:700,color:"#ffffff"}}>Planning only — the label is the law. Check the current label and official BLT bulletin before applying.</p>
           </div>
-          <div style={{flexShrink:0}}>
-            <div style={{background:"#1f5c2e",color:"#fff",padding:"4px 12px",borderRadius:5,fontSize:14,fontWeight:700,display:"inline-block"}}>Data verified: {LAST_DATA_UPDATE}</div>
-          </div>
+
         </div>
       </div>
 
       <div style={s.tb}>
-        {[["calc","Calculator"],["hsg","HSG & PULA Lookup"],["report","Compliance Report"],["methods","Methodology"],["data","Data Versions"],["refs","References"]].map(([id,lb])=>(
+        {[["calc","Calculator"],["hsg","Soil & PULA Lookup"],["report","Planning Report"],["methods","How It Works"],["data","Data Versions"],["refs","References"]].map(([id,lb])=>(
           <button key={id} style={s.tbi(tab===id)} onClick={()=>setTab(id)}>{lb}</button>
         ))}
       </div>
 
       <div style={{padding:"16px 22px",maxWidth:960,margin:"0 auto"}}>
-        {/* Planning-only notice */}
-        <div style={{padding:"14px 18px",background:"#fff8f5",border:"2px solid #1f5c2e",borderRadius:8,marginBottom:16,fontSize:14,color:"#1a1a1a",lineHeight:1.6}}>
-          <strong style={{color:"#1f5c2e",fontSize:15,display:"block",marginBottom:6}}>⚠️ FOR PLANNING PURPOSES ONLY — THE LABEL IS THE LAW</strong>
-          This tool helps you <strong>plan</strong> your herbicide program's ESA compliance. It does not replace the product label or EPA's official Bulletins Live! Two system. Always read the current label and generate official BLT bulletins at <strong>epa.gov/endangered-species/bulletins-live-two-view-bulletins</strong> before every application. No compliance guarantee is expressed or implied.
-          <div style={{marginTop:8,padding:"8px 12px",background:"#eaf3ec",borderLeft:"3px solid #1f5c2e",borderRadius:4,fontSize:13}}>
-            <strong>Agronomic Best Practices:</strong> Do not compromise effective weed control (e.g., using multiple effective sites of action) simply to avoid ESA mitigation points. Products listed as "ESA Pending" are expected to require mitigation points in the future as EPA completes their registration reviews.
-          </div>
-        </div>
-
         {/* ═══ CALCULATOR TAB ═══ */}
         {tab === "calc" && (<>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(min(100%, 260px), 1fr))",gap:12,marginBottom:14}}>
             <div style={s.cd}>
               <label htmlFor="county-select" style={s.lb}>Step 1a — County</label>
               <select id="county-select" value={county} onChange={e=>setCounty(e.target.value)} style={s.sl}>
@@ -635,6 +621,11 @@ export default function App() {
             </div>
           </div>
 
+          {enlistInPlan && !hsgResult && <div style={{...s.cd,background:k.purBg}}>
+            <strong>Using Enlist? Check your soil group.</strong>
+            <p style={{margin:"6px 0 10px",fontSize:14,lineHeight:1.6}}>Soil group affects the label's credit requirement. Don't know yours? Open the lookup and use your location or enter field coordinates. Your current location may not be the field you plan to treat.</p>
+            <button type="button" onClick={()=>setTab("hsg")} style={s.btn(k.acc,"#fff")}>Find my field's soil group</button>
+          </div>}
           {/* HSG indicator */}
           {hsgResult && <div style={{...s.cd,borderLeft:`4px solid ${k.pur}`,background:k.purBg,padding:"10px 16px",marginBottom:14}}>
             <span style={{fontSize:14,fontWeight:700,color:k.pur}}>Soil HSG from USDA lookup: {hsgResult}</span>
@@ -649,7 +640,7 @@ export default function App() {
               <div>
                 <h2 style={{margin:0,fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 2 — Spray Plan</h2>
               </div>
-              <button onClick={()=>setShowAdd(!showAdd)} style={s.btn(showAdd?k.red:k.acc,"#fff")}>{showAdd?"Cancel":"+ Add"}</button>
+              <button onClick={()=>setShowAdd(!showAdd)} style={s.btn(showAdd?k.red:k.acc,"#fff")}>{showAdd?"Cancel":"+ Add herbicide"}</button>
             </div>
 
             {showAdd && <div style={{background:k.bg,border:`1px solid ${k.bdr}`,borderRadius:7,padding:12,marginBottom:12}}>
@@ -985,9 +976,20 @@ export default function App() {
           </div>)}
         </div>)}
 
+        {/* Planning-only notice */}
+        <div style={{padding:"14px 18px",background:"#fff8f5",border:"2px solid #1f5c2e",borderRadius:8,marginBottom:16,fontSize:14,color:"#1a1a1a",lineHeight:1.6}}>
+          <strong style={{color:"#1f5c2e",fontSize:15,display:"block",marginBottom:6}}>⚠️ FOR PLANNING PURPOSES ONLY — THE LABEL IS THE LAW</strong>
+          This tool helps you <strong>plan</strong> your herbicide program's ESA compliance. It does not replace the product label or EPA's official Bulletins Live! Two system. Always read the current label and generate official BLT bulletins at <strong>epa.gov/endangered-species/bulletins-live-two-view-bulletins</strong> before every application. No compliance guarantee is expressed or implied.
+          <div style={{marginTop:8,padding:"8px 12px",background:"#eaf3ec",borderLeft:"3px solid #1f5c2e",borderRadius:4,fontSize:13}}>
+            <strong>Agronomic Best Practices:</strong> Do not compromise effective weed control (e.g., using multiple effective sites of action) simply to avoid ESA mitigation points. Products listed as "ESA Pending" are expected to require mitigation points in the future as EPA completes their registration reviews.
+          </div>
+        </div>
+
         <footer style={{textAlign:"center",padding:"20px 0 32px",fontSize:14,color:k.txL,lineHeight:1.8}}>
           <p style={{margin:"0 0 6px",fontWeight:600,color:k.tx}}>Managed and developed by Gourav Chahal, PhD student, working under Dr. David Russell and Dr. Andrew Price</p>
           <p style={{margin:0}}>Alabama ESA Mitigation Points Calculator v2.1 · Data verified: {LAST_DATA_UPDATE}</p>
+          <p style={{margin:"8px 0",color:k.txM}}>{LABEL_COVERAGE_NOTE}</p>
+          <p style={{margin:"8px 0",color:k.txM}}>Personal research and learning prototype. Not an official EPA or regulatory tool and not a substitute for current EPA guidance, Bulletins Live! Two, or the pesticide label. Verify all requirements before use.</p>
           <p style={{margin:0}}>For planning purposes only — the product label is the law · Contact: gzc0063@auburn.edu</p>
         </footer>
       </div>
