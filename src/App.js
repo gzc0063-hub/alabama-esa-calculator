@@ -704,7 +704,8 @@ export default function App() {
           {plan.length>0&&esaN>0&&<div style={{...s.cd,borderLeft:`4px solid ${k.acc}`}}>
             <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.acc,textTransform:"uppercase",letterSpacing:"1px"}}>Consolidated ESA Requirements</h2>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:8}}>
-              <MC l="Runoff Pts" v={maxReq} su="required" co={k.amb}/>
+              {enlistInPlan&&<MC l="Enlist credits" v={enlistReq} su="label requirement" co={k.pur}/>}
+              {menuReq>0&&<MC l="EPA Menu points" v={menuReq} su="label requirement" co={k.amb}/>}
               <MC l="Drift Buffer" v={`${maxBuf} ft`} su="downwind" co={k.blu}/>
               {sWind&&<MC l="Wind" v={windText} su={windMinAdv?"at boom · lower bound advisory":"at boom"} co={k.pur}/> }
               {sSpd&&<MC l="Max Speed" v={`${sSpd} mph`} su="ground" co={k.acc}/>}
@@ -715,26 +716,22 @@ export default function App() {
           {plan.length>0&&maxReq>0&&<div style={s.cd}>
             <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 3 — Mitigation Points</h2>
             <div style={{padding:"12px 16px",borderRadius:7,border:`2px solid ${ok?k.grn:k.amb}`,background:ok?k.grnBg:k.bg,marginBottom:14}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Menu points — Earned / Required</span>
-                <span style={{fontSize:24,fontWeight:800,color:menuDeficit===0?k.grn:k.amb}}>{menuReq>0?`${earned} / ${menuReq}`:"none required"}</span>
+              <div aria-live="polite" aria-atomic="true">
+                {enlistInPlan && <div style={{marginBottom:12}}>
+                  <strong style={{display:"block",fontSize:22,color:enlistDeficit?k.amb:k.grn}}>{enlistDeficit ? "You still need "+enlistDeficit+" Enlist credits" : "Enlist credit requirement met"}</strong>
+                  <span style={{fontSize:14}}>{earnedEnlist} earned of {enlistReq} required · Enlist label credits</span>
+                </div>}
+                {menuReq>0 && <div style={{marginBottom:12}}>
+                  <strong style={{display:"block",fontSize:enlistInPlan?18:22,color:menuDeficit?k.amb:k.grn}}>{menuDeficit ? "You still need "+menuDeficit+" EPA Menu points" : "EPA Menu points requirement met"}</strong>
+                  <span style={{fontSize:14}}>{earned} earned of {menuReq} required · EPA Mitigation Menu</span>
+                </div>}
+                {enlistInPlan && menuReq===0 && <p style={{margin:"4px 0 10px",fontSize:14}}>EPA Menu points: {earned} earned. None required for this plan; these do not count as Enlist credits.</p>}
+                <p style={{margin:"6px 0",fontSize:14,fontWeight:600}}>{ok?"Points requirement met — label restrictions not checked":"Select practices below that are actually used on your field. Label restrictions are not checked."}</p>
               </div>
-              <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden",marginBottom:enlistInPlan?10:0}}>
-                <div style={{height:"100%",width:`${Math.min(100,menuReq>0?(earned/menuReq)*100:0)}%`,background:menuDeficit===0?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
-              </div>
-              {enlistInPlan&&<>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                  <span style={{fontSize:14,fontWeight:600,color:k.txM}}>Enlist credits — Earned / Required</span>
-                  <span style={{fontSize:24,fontWeight:800,color:enlistDeficit===0?k.grn:k.amb}}>{earnedEnlist} / {enlistReq}</span>
-                </div>
-                <div style={{height:8,background:k.bdrL,borderRadius:4,overflow:"hidden"}}>
-                  <div style={{height:"100%",width:`${Math.min(100,enlistReq>0?(earnedEnlist/enlistReq)*100:0)}%`,background:enlistDeficit===0?k.grn:k.amb,borderRadius:4,transition:"width 0.3s"}}/>
-                </div>
-                <p style={{margin:"6px 0 0",fontSize:13,color:k.txM,lineHeight:1.5}}>Enlist One/Duo use their own label credit table, not Menu points. County relief and the multi-category bonus do not count toward Enlist credits. This tool does not count the label's applications row (1 application = 4 credits) or the 100 ft filter-strip tier — check the label. A field that is both no-till and cover-cropped earns both: residue tillage 4 credits and cover crop 2 credits, as separate rows of the label's table — and the EPA Mitigation Menu and EPA's PALM calculator allow the same combination for Menu points.</p>
-              </>}
-              <p style={{margin:"6px 0 0",fontSize:14,fontWeight:600,color:ok?k.grn:k.amb}}>
-                {ok?"✓ Points requirement met — label restrictions not checked":`${menuDeficit>0?`Menu points short by ${menuDeficit} — ${earned} of ${menuReq}. `:""}${enlistDeficit>0?`Enlist credits short by ${enlistDeficit} — ${earnedEnlist} of ${enlistReq}. `:""}${county} County`}
-              </p>
+              {enlistInPlan && <details style={{fontSize:14,marginTop:8}}>
+                <summary style={{cursor:"pointer",padding:"8px 0",fontWeight:600}}>How Enlist credits differ from EPA points</summary>
+                <p>Enlist One/Duo use their own label credit table. County relief and the multi-category bonus do not count toward Enlist credits. This tool does not count the label's applications row or the 100 ft filter-strip tier; check the label. No-till earns 4 Enlist credits and cover crop earns 2, for 6 together. EPA Menu points are calculated separately.</p>
+              </details>}
             </div>
 
             {prac.includes("eqip") && <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>Maximum met — no additional practices needed. An EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1). Other practices are disabled because they are not needed.</div>}
@@ -745,36 +742,46 @@ export default function App() {
               ? <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Requirement raised because this field is inside a PULA: dicamba needs 6 points, Empera needs 3 points inside its PULAs. This is what the tool knows from the PULA check at your coordinates — it does not know your product or month, so generate the BLT bulletin and follow it before application.</div>
               : <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>PULA check not run — the tool does not know whether this field is inside a PULA. Dicamba requires 6 points inside a PULA and Empera requires 3 points inside its PULAs. Run the PULA check, or generate a BLT bulletin, before relying on this result.</div>)}
             {plan.length>0 && <div style={{padding:"12px 16px",borderRadius:7,background:"#fff7e6",border:"1px solid #e8c96a",marginBottom:14}}>
-              <h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,color:k.amb}}>Label restrictions this tool does NOT check</h3>
+              <details><summary style={{cursor:"pointer",fontSize:14,fontWeight:700,color:k.amb,padding:"6px 0"}}>Label restrictions still apply — view details</summary>
               <p style={{margin:"0 0 8px",fontSize:14,color:k.tx,lineHeight:1.6}}>The verdict above covers runoff/erosion points only. These label restrictions decide whether an application is legal — this tool does not check them. Read the label and the BLT bulletin before every application.</p>
               {plan.filter(h=>h.restr).map(h=>(<div key={h.id} style={{marginBottom:8}}><strong style={{fontSize:14}}>{h.nm} (EPA Reg. {h.reg}):</strong><ul style={{margin:"4px 0 0",paddingLeft:20,fontSize:14,color:k.tx,lineHeight:1.6}}>{h.restr.map((r,i)=><li key={i}>{r}</li>)}</ul></div>))}
               {!plan.some(h=>h.restr) && <p style={{margin:0,fontSize:14,color:k.tx}}>None of the products in this plan has a modelled label restriction in this tool. The label and BLT bulletin may still impose restrictions — check them before application.</p>}
+              </details>
             </div>}
             <p style={{margin:"0 0 10px",fontSize:13,color:k.txM}}>Where EPA marks a Mitigation Menu row "Select one option", only one option in that row may be claimed — selecting one deselects the others, and the reason is shown above.</p>
-            {Object.entries(CATL).map(([ck,cl])=>(
-              <div key={ck} style={{marginBottom:14}}>
-                <h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"0.8px",borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{cl}</h3>
-                {PRACT.filter(p=>p.cat===ck).map(p=>{
-                  const a = prac.includes(p.id);
-                  // Disabled with an on-screen reason: EQIP already meets the
-                  // 9-pt maximum (EPA §3.2), or the HSG lookup rules the sandy
-                  // tier out (EPA §3.1 E5). Disabled rows cannot be toggled.
-                  const dis = prac.includes("eqip") && p.id !== "eqip"
-                    ? "Not needed — EQIP already meets the 9-point maximum (EPA Mitigation Menu Table 1)."
-                    : (sandBlockedInPlan && (p.id === "sandy" || p.id === "sandyB"))
-                    ? sandBlockReason
-                    : sandyReason(p.id);
-                  return <div key={p.id} onClick={()=>{ if (!dis) togP(p.id); }} style={{display:"flex",alignItems:"flex-start",gap:10,padding:"8px 10px",minHeight:"44px",borderRadius:6,cursor:dis?"not-allowed":"pointer",opacity:dis?0.55:1,background:a?k.grnBg:"transparent",border:`1px solid ${a?k.grnL:"transparent"}`,marginBottom:3}}>
-                    <div style={{width:18,height:18,borderRadius:4,border:`2px solid ${a?k.grn:k.bdr}`,background:a?k.grn:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"#fff",fontWeight:800,flexShrink:0,marginTop:1}}>{a&&"✓"}</div>
-                    <div style={{flex:1}}><div style={{fontSize:14,fontWeight:600,color:a?k.tx:k.txM}}>{p.nm}</div><div style={{fontSize:14,color:k.txM,marginTop:1}}>{p.d}</div>{dis && <div style={{fontSize:13,color:k.amb,marginTop:3,fontWeight:600}}>{dis}</div>}</div>
-                    <span style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3,flexShrink:0}}>
-                      <span style={{...s.tg(k.ambBg,k.amb),fontWeight:800}}>+{p.pts}</span>
-                      {enlistInPlan&&<span style={{...s.tg(k.purBg,k.pur),fontWeight:800}}>+{enlistCr(p)} Enlist</span>}
-                    </span>
+            {prac.length>0 && <div style={{marginBottom:14}}>
+              <strong style={{fontSize:14}}>Selected practices ({prac.length})</strong>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:6}}>{PRACT.filter(p=>prac.includes(p.id)).map(p=><button type="button" key={p.id} onClick={()=>togP(p.id)} aria-label={"Remove "+p.nm} style={{...s.btn(k.grnBg,k.tx),fontSize:13,textAlign:"left"}}>{p.nm} ×</button>)}</div>
+            </div>}
+            {(enlistInPlan
+              ? [["enlist","Practices that earn Enlist credits"], ...Object.entries(CATL)]
+              : Object.entries(CATL)).map(([ck,cl])=>{
+              const items=PRACT.filter(p=>ck==="enlist"?enlistCr(p)>0:p.cat===ck&&(!enlistInPlan||enlistCr(p)===0));
+              if(!items.length)return null;
+              const selected=items.filter(p=>prac.includes(p.id)).length;
+              return <details key={ck} style={{marginBottom:10,border:"1px solid "+k.bdr,borderRadius:7,background:k.card}}>
+                <summary style={{padding:"14px 12px",cursor:"pointer",fontSize:15,fontWeight:700,color:ck==="enlist"?k.pur:k.tx}}>{cl} <span style={{fontSize:13,fontWeight:500}}>({items.length} options{selected?" · "+selected+" selected":""})</span></summary>
+                {enlistInPlan&&ck!=="enlist"&&<p style={{margin:"0 12px 10px",fontSize:14,color:k.txM}}>These options earn EPA Menu points, but no Enlist credits for your current soil group.</p>}
+                {items.map(p=>{
+                  const a=prac.includes(p.id);
+                  const dis=prac.includes("eqip")&&p.id!=="eqip"
+                    ? "Not needed — EQIP already meets the EPA Menu maximum."
+                    : sandBlockedInPlan&&(p.id==="sandy"||p.id==="sandyB")?sandBlockReason:sandyReason(p.id);
+                  return <div key={p.id} style={{padding:"10px 12px",borderTop:"1px solid "+k.bdrL,background:a?k.grnBg:"transparent"}}>
+                    <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:dis?"not-allowed":"pointer",minHeight:44}}>
+                      <input type="checkbox" checked={a} disabled={Boolean(dis)} onChange={()=>togP(p.id)} style={{width:20,height:20,flexShrink:0,marginTop:3,accentColor:k.grn}}/>
+                      <span style={{flex:1,minWidth:0,fontSize:14,fontWeight:600}}>{p.nm}</span>
+                      <span style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,fontSize:13,flexShrink:0}}>
+                        {enlistInPlan&&enlistCr(p)>0&&<strong style={{color:k.pur}}>+{enlistCr(p)} Enlist credits</strong>}
+                        <span>+{p.pts} EPA points</span>
+                      </span>
+                    </label>
+                    {dis&&<p style={{margin:"4px 0",fontSize:13,color:k.amb}}>{dis}</p>}
+                    <details style={{fontSize:13,color:k.txM}}><summary style={{cursor:"pointer",padding:"6px 0"}}>Practice details and eligibility</summary><p style={{margin:"4px 0",lineHeight:1.6}}>{p.d}</p></details>
                   </div>;
                 })}
-              </div>
-            ))}
+              </details>;
+            })}
           </div>}
         </>)}
 
