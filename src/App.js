@@ -398,6 +398,14 @@ export default function App() {
   // (conservative default; PPLS label check Nov 12, 2026).
   const enlistInPlan = plan.some(h => h.id === "enlist-one" || h.id === "enlist-duo");
   const dicambaInPlan = plan.some(h => h.id === "engenia" || h.id === "stryax" || h.id === "tavium");
+  const emperaInPlan = plan.some(h => h.id === "empera");
+  // Fix 10: the PULA notice names only the products actually in the plan.
+  const pulaRaisedText = dicambaInPlan && emperaInPlan
+    ? "dicamba needs 6 points, Empera needs 3 points inside its PULAs"
+    : dicambaInPlan ? "dicamba needs 6 points" : "Empera needs 3 points inside its PULAs";
+  const pulaUnknownText = dicambaInPlan && emperaInPlan
+    ? "Dicamba requires 6 points inside a PULA and Empera requires 3 points inside its PULAs"
+    : dicambaInPlan ? "Dicamba requires 6 points inside a PULA" : "Empera requires 3 points inside its PULAs";
   const sandBlockedInPlan = enlistInPlan || dicambaInPlan;
   const sandBlockReason = dicambaInPlan
     ? "Not available: the Feb 6, 2026 dicamba labels (Engenia, Stryax, Tavium Plus) prohibit application to sand soils with less than 3% organic matter where groundwater is shallow; Tavium Plus bans sand/loamy sand outright. This tool does not track soil organic matter or groundwater depth."
@@ -738,8 +746,8 @@ export default function App() {
             {exclNote && !prac.includes("eqip") && <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb}}>{exclNote}</div>}
             {hsgResult && <div style={{padding:"10px 14px",borderRadius:7,background:k.purBg,border:`1px solid #c9b8e8`,marginBottom:12,fontSize:14,color:k.pur}}>Soil HSG {hsgResult}: {["C","D","C/D"].includes(hsgResult.toUpperCase()) ? "neither sandy-soil tier is available (HSG A or B only)." : hsgResult.toUpperCase().replace("/D","") === "B" ? "only the 2-point HSG B sandy tier applies." : "only the 3-point HSG A sandy tier applies."} (EPA Mitigation Menu Table 1, Predominantly sandy soils.)</div>}
             {plan.some(h=>h.ptsPULA!=null) && (pulaResults?.found
-              ? <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Requirement raised because this field is inside a PULA: dicamba needs 6 points, Empera needs 3 points inside its PULAs. This is what the tool knows from the PULA check at your coordinates — it does not know your product or month, so generate the BLT bulletin and follow it before application.</div>
-              : <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>PULA check not run — the tool does not know whether this field is inside a PULA. Dicamba requires 6 points inside a PULA and Empera requires 3 points inside its PULAs. Run the PULA check, or generate a BLT bulletin, before relying on this result.</div>)}
+              ? <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Requirement raised because this field is inside a PULA: {pulaRaisedText}. This is what the tool knows from the PULA check at your coordinates — it does not know your product or month, so generate the BLT bulletin and follow it before application.</div>
+              : <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>PULA check not run — the tool does not know whether this field is inside a PULA. {pulaUnknownText}. Run the PULA check, or generate a BLT bulletin, before relying on this result.</div>)}
             {plan.length>0 && <div style={{padding:"12px 16px",borderRadius:7,background:"#fff7e6",border:"1px solid #e8c96a",marginBottom:14}}>
               <details><summary style={{cursor:"pointer",fontSize:14,fontWeight:700,color:k.amb,padding:"6px 0"}}>Label restrictions still apply — view details</summary>
               <p style={{margin:"0 0 8px",fontSize:14,color:k.tx,lineHeight:1.6}}>The verdict above covers runoff/erosion points only. These label restrictions decide whether an application is legal — this tool does not check them. Read the label and the BLT bulletin before every application.</p>
