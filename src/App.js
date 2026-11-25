@@ -440,6 +440,9 @@ export default function App() {
     ? "Liberty ULTRA and Enlist cannot be applied at this location (inside their PULA)"
     : libertyNoSpray ? "Liberty ULTRA cannot be applied at this location (inside its PULA)"
     : "Enlist One and Enlist Duo cannot be applied at this location (inside their PULA)";
+  // Fix 14: per-product no-spray flag, so the spray plan cards and the printed
+  // spray plan table match the Calculator and PULA tabs.
+  const isNoSpray = (h) => (libertyNoSpray && h.id === "liberty-ultra") || (enlistNoSpray && (h.id === "enlist-one" || h.id === "enlist-duo"));
   const cherokeeNoSprayNames = plan.filter(h => CHEROKEE_NOSPRAY_NAMES[h.id]).map(h => CHEROKEE_NOSPRAY_NAMES[h.id]).join(" and ");
   const sandBlockedInPlan = enlistInPlan || dicambaInPlan;
   const sandBlockReason = dicambaInPlan
@@ -710,6 +713,7 @@ export default function App() {
               {plan.map(h=>{
                 const ex = expH===h.id;
                 const hp = getHerbPts(h);
+                const ns = isNoSpray(h);
                 return <div key={h.id} style={{border:`1px solid ${h.esa==="active"?k.acc+"44":k.bdr}`,borderRadius:7,padding:"10px 14px",background:h.esa==="active"?k.accBg:k.card}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                     <div style={{flex:1}}>
@@ -720,8 +724,10 @@ export default function App() {
                       <div style={{display:"flex",gap:4,marginTop:5,flexWrap:"wrap"}}>
                         {h.esa==="active"?<>
                           <span style={s.tg(k.redBg,k.red)}>ESA Active</span>
-                          <span style={s.tg(k.ambBg,k.amb)}>Runoff: {hp} {h.ptsCD?"credits":"pts"}{h.ptsCD&&hsgResult?` (HSG ${hsgResult})`:h.ptsCD?" (HSG unknown—using C/D)":""}{pulaResults?.found&&h.ptsPULA!=null?" (inside PULA)":""}</span>
-                          <span style={s.tg(k.bluBg,k.blu)}>Buffer: {h.buf} ft</span>
+                          {ns
+                            ? <span style={{...s.tg(k.redBg,k.red),fontWeight:700}}>Not allowed here: inside its PULA</span>
+                            : <><span style={s.tg(k.ambBg,k.amb)}>Runoff: {hp} {h.ptsCD?"credits":"pts"}{h.ptsCD&&hsgResult?` (HSG ${hsgResult})`:h.ptsCD?" (HSG unknown—using C/D)":""}{pulaResults?.found&&h.ptsPULA!=null?" (inside PULA)":""}</span>
+                          <span style={s.tg(k.bluBg,k.blu)}>Buffer: {h.buf} ft</span></>}
                           {h.blt&&<span style={s.tg(k.purBg,k.pur)}>BLT Required</span>}
                         </>:<>
                           <span style={s.tg(k.tagBg,k.txM)}>ESA Pending</span>
@@ -949,7 +955,7 @@ export default function App() {
             {hsgResult&&<p><strong>Soil HSG (USDA SDA):</strong> {hsgResult} at ({lat}, {lon})</p>}
             <h2>Spray Plan ({plan.length} products)</h2>
             <table><thead><tr><th>Product</th><th>AI</th><th>Group</th><th>EPA Reg.</th><th>ESA Status</th><th>Runoff Pts</th><th>Drift Buffer</th></tr></thead>
-            <tbody>{plan.map(h=><tr key={h.id}><td>{h.nm}</td><td>{h.ai}</td><td>{h.grp}</td><td>{h.reg}</td><td>{h.esa==="active"?"ACTIVE":"Pending"}</td><td>{h.esa==="active"?getHerbPts(h):"N/A"}</td><td>{h.esa==="active"?`${h.buf} ft`:"N/A"}</td></tr>)}</tbody></table>
+            <tbody>{plan.map(h=><tr key={h.id}><td>{h.nm}</td><td>{h.ai}</td><td>{h.grp}</td><td>{h.reg}</td><td>{h.esa==="active"?"ACTIVE":"Pending"}</td><td>{isNoSpray(h)?"Not allowed (inside its PULA)":h.esa==="active"?getHerbPts(h):"N/A"}</td><td>{isNoSpray(h)?"N/A":h.esa==="active"?`${h.buf} ft`:"N/A"}</td></tr>)}</tbody></table>
             <h2>Mitigation Points Assessment</h2>
             <p><strong>Menu points — Maximum required:</strong> {menuReq} points &nbsp;|&nbsp; <strong>Earned:</strong> {earned} points</p>
             {enlistInPlan&&enlistNoSpray&&<p><strong>Enlist One/Duo:</strong> cannot be applied at this location (inside their PULA); no Enlist credits apply.</p>}
