@@ -458,9 +458,10 @@ export default function App() {
     return v;
   }, [hsgLetter]);
   const menuReq = useMemo(() => {
-    const others = plan.filter(h => h.esa === "active" && h.id !== "enlist-one" && h.id !== "enlist-duo");
+    // Fix 12: inside its no-application PULA, Liberty ULTRA sets no points target.
+    const others = plan.filter(h => h.esa === "active" && h.id !== "enlist-one" && h.id !== "enlist-duo" && !(libertyNoSpray && h.id === "liberty-ultra"));
     return others.length ? Math.max(...others.map(h => getHerbPts(h))) : 0;
-  }, [plan, getHerbPts]);
+  }, [plan, getHerbPts, libertyNoSpray]);
   const enlistReq = useMemo(() => {
     const e = plan.find(h => h.id === "enlist-one" || h.id === "enlist-duo");
     return e ? getHerbPts(e) : 0;
