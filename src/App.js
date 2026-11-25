@@ -301,6 +301,7 @@ export default function App() {
         }
         setLat(la.toFixed(6));
         setLon(lo.toFixed(6));
+        setPulaResults(null);
         setGeoUsed(true);
         setGeoLoading(false);
       },
@@ -360,17 +361,21 @@ export default function App() {
   // the 9-point maximum (EPA verification §3.2).
   const togP = useCallback(id => {
     if (prac.includes(id)) { setPrac(p => p.filter(x => x !== id)); setExclNote(""); return; }
+    // Fix 11: EQIP earns no Enlist credits, so with Enlist One/Duo in the plan
+    // the practices that earn Enlist credits stay selected and selectable.
+    const enl = plan.some(h => h.id === "enlist-one" || h.id === "enlist-duo");
     if (id === "eqip") {
-      const dropped = prac.filter(x => x !== "eqip");
-      setPrac(["eqip"]);
-      setExclNote(dropped.length ? "Maximum met — no additional practices needed. Deselected " + dropped.map(d => (PRACT.find(p => p.id === d) || {}).nm || d).join(", ") + ": an EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1)." : "Maximum met — no additional practices needed: an EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1).");
+      const keep = enl ? prac.filter(x => x !== "eqip" && ENLIST_CREDITS[x] != null) : [];
+      const dropped = prac.filter(x => x !== "eqip" && !keep.includes(x));
+      setPrac([...keep, "eqip"]);
+      setExclNote(dropped.length ? "EPA Menu maximum met — no additional practices needed for EPA Menu points. Deselected " + dropped.map(d => (PRACT.find(p => p.id === d) || {}).nm || d).join(", ") + ": an EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1)." : "");
       return;
     }
-    if (prac.includes("eqip")) return; // other practices are disabled while EQIP is selected
+    if (prac.includes("eqip") && !(enl && ENLIST_CREDITS[id] != null)) return; // other practices are disabled while EQIP is selected, except those that earn Enlist credits
     const dropped = prac.filter(x => conflictsOf(id).includes(x));
     setPrac(p => [...p.filter(x => !conflictsOf(id).includes(x)), id]);
     setExclNote(dropped.length ? conflictNoteFor(id, dropped) : "");
-  }, [prac]);
+  }, [prac, plan]);
 
   // Sandy-soil gating (EPA verification §3.1 E5): which sandy tier, if any, the
   // HSG lookup allows. A/D and B/D resolve to the drained group (A / B).
@@ -538,7 +543,7 @@ export default function App() {
       // strings here. The report body is attached as a cloned DOM node and
       // the footer is built with textContent, so nothing the user typed can
       // become markup in the print window.
-      win.document.write(`<html><head><title>ESA Compliance Report</title>
+      win.document.write(`<html><head><title>ESA Planning Record</title>
         <style>body{font-family:${f};font-size:13px;color:#222;padding:32px;line-height:1.65}
         h1{font-size:18px;border-bottom:2px solid #c04a20;padding-bottom:8px}
         h2{font-size:15px;margin-top:20px;color:#c04a20}
@@ -550,7 +555,7 @@ export default function App() {
         .footer{margin-top:30px;border-top:1px solid #ccc;padding-top:12px;font-size:11px;color:#888}
         @media print{body{padding:20px}}</style></head><body><div id="report-root"></div><div id="report-footer" class="footer"></div></body></html>`);
       win.document.close();
-      win.document.title = `ESA Compliance Report — ${county} County — ${new Date().toLocaleDateString()}`;
+      win.document.title = `ESA Planning Record — ${county} County — ${new Date().toLocaleDateString()}`;
       const root = win.document.getElementById("report-root");
       if (root) root.appendChild(content.cloneNode(true));
       const footer = win.document.getElementById("report-footer");
@@ -728,12 +733,12 @@ export default function App() {
                   <strong style={{display:"block",fontSize:22,color:enlistDeficit?k.amb:k.grn}}>{enlistDeficit ? "You still need "+enlistDeficit+" Enlist credits" : "Enlist credit requirement met"}</strong>
                   <span style={{fontSize:14}}>{earnedEnlist} earned of {enlistReq} required · Enlist label credits</span>
                 </div>}
-                {(menuReq>0 || (esaN>0 && !enlistInPlan)) && <div style={{marginBottom:12}}>
+                {menuReq>0 && <div style={{marginBottom:12}}>
                   <strong style={{display:"block",fontSize:enlistInPlan?18:22,color:menuDeficit?k.amb:k.grn}}>{menuDeficit ? "You still need "+menuDeficit+" EPA Menu points" : "EPA Menu points requirement met"}</strong>
                   <span style={{fontSize:14}}>{earned} earned of {menuReq} required · EPA Mitigation Menu</span>
                 </div>}
                 {enlistInPlan && menuReq===0 && <p style={{margin:"4px 0 10px",fontSize:14}}>EPA Menu points: {earned} earned. None required for this plan; these do not count as Enlist credits.</p>}
-                <p style={{margin:"6px 0",fontSize:14,fontWeight:600}}>{esaN===0?"None of the products in this plan carry an ESA points requirement yet. No mitigation points are needed for this plan.":ok?"Points requirement met — label restrictions not checked":"Select practices below that are actually used on your field. Label restrictions are not checked."}</p>
+                <p style={{margin:"6px 0",fontSize:14,fontWeight:600}}>{esaN===0?"None of the products in this plan carry an ESA points requirement yet. No mitigation points are needed for this plan.":(menuReq===0&&!enlistInPlan)?"No product in this plan needs EPA Menu points outside a PULA. No mitigation points are needed for this plan unless the field is inside a PULA.":ok?"Points requirement met — label restrictions not checked":"Select practices below that are actually used on your field. Label restrictions are not checked."}</p>
               </div>
               {enlistInPlan && <details style={{fontSize:14,marginTop:8}}>
                 <summary style={{cursor:"pointer",padding:"8px 0",fontWeight:600}}>How Enlist credits differ from EPA points</summary>
@@ -741,12 +746,14 @@ export default function App() {
               </details>}
             </div>
 
-            {prac.includes("eqip") && <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>Maximum met — no additional practices needed. An EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1). Other practices are disabled because they are not needed.</div>}
+            {prac.includes("eqip") && <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>EPA Menu maximum met — no additional practices needed for EPA Menu points. An EPA-Qualified Conservation Program (EQIP + CPS 595) alone meets the 9-point maximum (EPA Mitigation Menu Table 1). {enlistInPlan ? "EQIP earns no Enlist credits, so the practices that earn Enlist credits stay available; the other practices are disabled because they are not needed." : "Other practices are disabled because they are not needed."}</div>}
             {multiBonus===1 && <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>Multi-category bonus +1 point — your selected practices come from at least two categories (in-field, field-adjacent, or systems that capture runoff). EPA Mitigation Menu Table 2, "Using mitigation measures from multiple categories".</div>}
-            {exclNote && !prac.includes("eqip") && <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb}}>{exclNote}</div>}
+            {exclNote && (!prac.includes("eqip") || enlistInPlan) && <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb}}>{exclNote}</div>}
             {hsgResult && <div style={{padding:"10px 14px",borderRadius:7,background:k.purBg,border:`1px solid #c9b8e8`,marginBottom:12,fontSize:14,color:k.pur}}>Soil HSG {hsgResult}: {["C","D","C/D"].includes(hsgResult.toUpperCase()) ? "neither sandy-soil tier is available (HSG A or B only)." : hsgResult.toUpperCase().replace("/D","") === "B" ? "only the 2-point HSG B sandy tier applies." : "only the 3-point HSG A sandy tier applies."} (EPA Mitigation Menu Table 1, Predominantly sandy soils.)</div>}
             {plan.some(h=>h.ptsPULA!=null) && (pulaResults?.found
               ? <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Requirement raised because this field is inside a PULA: {pulaRaisedText}. This is what the tool knows from the PULA check at your coordinates — it does not know your product or month, so generate the BLT bulletin and follow it before application.</div>
+              : pulaResults && pulaResults.found === false
+              ? <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>No PULA found at your coordinates (screening only). {pulaUnknownText}. This is a point-in-time check at one point; it does not cover your product or month, so generate the BLT bulletin and follow it before application.</div>
               : <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>PULA check not run — the tool does not know whether this field is inside a PULA. {pulaUnknownText}. Run the PULA check, or generate a BLT bulletin, before relying on this result.</div>)}
             {plan.length>0 && <div style={{padding:"12px 16px",borderRadius:7,background:"#fff7e6",border:"1px solid #e8c96a",marginBottom:14}}>
               <details><summary style={{cursor:"pointer",fontSize:14,fontWeight:700,color:k.amb,padding:"6px 0"}}>Label restrictions still apply — view details</summary>
@@ -771,7 +778,7 @@ export default function App() {
                 {enlistInPlan&&ck!=="enlist"&&<p style={{margin:"0 12px 10px",fontSize:14,color:k.txM}}>These options earn EPA Menu points, but no Enlist credits for your current soil group.</p>}
                 {items.map(p=>{
                   const a=prac.includes(p.id);
-                  const dis=prac.includes("eqip")&&p.id!=="eqip"
+                  const dis=prac.includes("eqip")&&p.id!=="eqip"&&!(enlistInPlan&&ENLIST_CREDITS[p.id]!=null)
                     ? "Not needed — EQIP already meets the EPA Menu maximum."
                     : sandBlockedInPlan&&(p.id==="sandy"||p.id==="sandyB")?sandBlockReason:sandyReason(p.id);
                   return <div key={p.id} style={{padding:"10px 12px",borderTop:"1px solid "+k.bdrL,background:a?k.grnBg:"transparent"}}>
@@ -828,8 +835,8 @@ export default function App() {
             {/* MANUAL COORDINATE ENTRY */}
             <p style={{margin:"0 0 8px",fontSize:14,fontWeight:600,color:k.txM}}>Or enter coordinates manually:</p>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-              <div><label htmlFor="lat-input" style={s.lb}>Latitude (°N)</label><input id="lat-input" placeholder="e.g. 32.5901" value={lat} onChange={e=>{setLat(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
-              <div><label htmlFor="lon-input" style={s.lb}>Longitude (°W, use negative)</label><input id="lon-input" placeholder="e.g. -85.4944" value={lon} onChange={e=>{setLon(e.target.value);setGeoUsed(false);}} style={s.inp}/></div>
+              <div><label htmlFor="lat-input" style={s.lb}>Latitude (°N)</label><input id="lat-input" placeholder="e.g. 32.5901" value={lat} onChange={e=>{setLat(e.target.value);setGeoUsed(false);setPulaResults(null);}} style={s.inp}/></div>
+              <div><label htmlFor="lon-input" style={s.lb}>Longitude (°W, use negative)</label><input id="lon-input" placeholder="e.g. -85.4944" value={lon} onChange={e=>{setLon(e.target.value);setGeoUsed(false);setPulaResults(null);}} style={s.inp}/></div>
             </div>
           </div>
 
@@ -883,14 +890,15 @@ export default function App() {
 
         {/* ═══ REPORT TAB ═══ */}
         {tab === "report" && (<div style={s.cd}>
-          <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Printable Compliance Report</h2>
-          <p style={{margin:"0 0 6px",fontSize:14,color:k.txM,lineHeight:1.6}}>Generate a printable compliance record documenting your field's ESA mitigation status. <strong>Keeping this report on file with your spray records, as your paper or electronic record of the mitigation measures employed, earns +1 mitigation tracking point</strong> under EPA Mitigation Menu Table 1, provided the listed measures are actually in place.</p>
+          <h2 style={{margin:"0 0 4px",fontSize:16,fontWeight:800}}>Printable Planning Record</h2>
+          <p style={{margin:"0 0 6px",fontSize:14,color:k.txM,lineHeight:1.6}}>Generate a printable planning record of the mitigation points in your plan. It is not a compliance document. If you keep it with your spray records and it lists the mitigation measures you actually used, it may help support the mitigation tracking point under EPA Mitigation Menu Table 1. Printing it alone does not earn that point.</p>
           {(!county||!crop||plan.length===0)?<p style={{fontSize:14,color:k.amb}}>Complete the Calculator tab first (county, crop, spray plan, and practices).</p>:
           <button onClick={printReport} style={s.btn(k.acc,"#fff")}>Generate & Print Report</button>}
 
           {/* Hidden report content */}
           <div ref={reportRef} style={{display:showReport?"block":"none"}}>
-            <h1>ESA Mitigation Compliance Report</h1>
+            <h1>ESA Mitigation Planning Record</h1>
+            <p><em>Planning record only — not a compliance document. The product label and the BLT bulletin are the law.</em></p>
             <p><strong>County:</strong> {county} ({cty?.v==="H"?"High":"Medium"} vulnerability, {ctyRel} relief pts) &nbsp;|&nbsp; <strong>Crop:</strong> {CL[crop]} &nbsp;|&nbsp; <strong>Date:</strong> {new Date().toLocaleDateString()}</p>
             {hsgResult&&<p><strong>Soil HSG (USDA SDA):</strong> {hsgResult} at ({lat}, {lon})</p>}
             <h2>Spray Plan ({plan.length} products)</h2>
@@ -899,7 +907,7 @@ export default function App() {
             <h2>Mitigation Points Assessment</h2>
             <p><strong>Menu points — Maximum required:</strong> {menuReq} points &nbsp;|&nbsp; <strong>Earned:</strong> {earned} points</p>
             {enlistInPlan&&<p><strong>Enlist credits — Required:</strong> {enlistReq} credits &nbsp;|&nbsp; <strong>Earned:</strong> {earnedEnlist} credits &nbsp;|&nbsp; <em>Enlist One/Duo use their own label credit table; county relief and the multi-category bonus do not count toward Enlist credits.</em></p>}
-            <p><strong>Status:</strong> <span className={ok?"pass":"fail"}>{esaN===0?"No ESA points requirement for this plan":ok?"Points requirement met — label restrictions not checked":`Points shortfall: ${menuDeficit>0?`Menu ${menuDeficit} pts. `:""}${enlistDeficit>0?`Enlist ${enlistDeficit} credits. `:""}`}</span></p>
+            <p><strong>Status:</strong> <span className={ok?"pass":"fail"}>{esaN===0?"No ESA points requirement for this plan":(menuReq===0&&!enlistInPlan)?"No mitigation points needed for this plan outside a PULA":ok?"Points requirement met — label restrictions not checked":`Points shortfall: ${menuDeficit>0?`Menu ${menuDeficit} pts. `:""}${enlistDeficit>0?`Enlist ${enlistDeficit} credits. `:""}`}</span></p>
             <p>This verdict covers runoff/erosion points only. It does not check the label restrictions listed below.</p>
             <table><thead><tr><th>Practice</th><th>Points</th>{enlistInPlan&&<th>Enlist Cr</th>}<th>Applied</th></tr></thead>
             <tbody>
@@ -926,7 +934,7 @@ export default function App() {
             {t:"4. PULA Integration (Limitation 2 RESOLVED)",b:"EPA publishes PULA polygons as an ArcGIS Map Service (Item ID: 83c55a9cfea24f18a816b7a5933a7eb5). This version queries layer 0 (\"Effective Pulas\") of the BLT Pesticide Use Limitation Areas MapServer at blt.epa.gov/arcgis/rest/services/BLT/PesticideUsageLimitationAreas/MapServer, with an esriGeometryPoint spatial intersection to detect PULAs at user coordinates. A PULA hit raises the requirement to 6 points for dicamba products and 3 points for Empera; with no PULA result the tool says so plainly instead of assuming the field is outside a PULA. Results are informational — official compliance requires generating bulletins from EPA's Bulletins Live! Two system. The BLT REST API (epa.gov/endangered-species/public-rest-api-bulletins) provides product-specific bulletin data in JSON format."},
             {t:"5. Runoff Points Algorithm",b:"The calculator implements EPA's 7-step workflow: (1) identify products, (2) check for ESA label language, (3) evaluate field exemptions, (4) find product with highest point requirement, (5) sum relief + practice points, (6) compare earned vs required, (7) verify label/bulletin adherence. Points are additive and field-specific, except where EPA marks a Mitigation Menu row 'Select one option' — only one option in such a row may be claimed (conservation tillage, cover crop, VFS/field border, riparian area, sandy soils, rate reduction, proportion treated, irrigation, mulching, terrestrial habitat, filtering devices, technical specialist / non-qualified program), and the earned total is capped at 9 points, the maximum any label can require. The maximum-requirement product sets the target; individual product requirements are not summed. Multi-category bonus: +1 point when selected practices come from at least two of in-field, field-adjacent, or systems that capture runoff and discharge (EPA Mitigation Menu Table 2). All Table 1 relief rows and all Table 2 rows are now selectable, including application parameters (rate reduction, PAM, proportion treated, soil incorporation), short-term cover crop, in-field vegetative strips, irrigation management, mulching, erosion barriers, riparian and terrestrial habitat tiers, filtering devices, and subsurface drainage without a controlled drainage structure. The verdict covers runoff/erosion points only: label restrictions (qualified VRA, temperature and growth-stage cutoffs, aerial bans, annual dicamba training) are listed separately in the Calculator tab and the print report and are not checked by the tool. Exception: Enlist One/Duo use their own credit table (see §7) — when Enlist is in the plan, the Menu requirement and the Enlist requirement are tracked separately and both must be met."},
             {t:"7. Enlist One/Duo — Their Own Credit Table",b:"Enlist One (62719-695) and Enlist Duo (62719-649), labels dated Jan 25, 2024, 'Management of Runoff' section, use their own runoff credit table — not the EPA Mitigation Menu points. HSG A/B require 4 credits, HSG C/D require 6 (6 is the conservative default when no HSG lookup has run). Credits come only from the label's table: residue tillage (no-till, strip-till, ridge-till, mulch-till) 4; cover crop 2; field border 2; vegetative barrier 2; contour buffer strips or terrace 2; grassed waterway 2; water and sediment basin 1; contour farming or contour strip cropping 1; vegetative filter strips 30 ft (HSG A/B 2, C/D 0) and 100 ft (A/B 4, C/D 1); fewer applications (1 application 4, 2 applications 2, 3 applications 0). County relief and the multi-category bonus do not count toward Enlist credits, and no other Menu practice counts. This tool does not count the applications row or the 100 ft filter-strip tier and says so on screen when Enlist is in the plan; a 20–30 ft filter strip earns 0 Enlist credits because the label's tier needs a 30 ft minimum, and a 60 ft or wider strip is counted as the 30 ft tier. A PULA hit does not change the Enlist requirement; the BLT bulletin governs separately. The label also requires meeting the minimum criteria on Enlist.com/mitigationmeasures to receive credits — the tool states this but does not verify it. Tillage and cover crop combine: the Enlist label lists residue tillage (4 credits) and cover crop (2 credits) as separate rows with no select-one limit between them, so a no-till field with a cover crop earns both. The EPA Mitigation Menu says you may select any combination of measures in the tables, and EPA's PALM calculator (tested Nov 20, 2026) lets no-till or reduced tillage stay selected together with any cover-crop tier, with no warning. A no-till field with a long-term cover crop therefore earns 4 + 2 = 6 Enlist credits, and 3 + 3 = 6 Menu points."},
-            {t:"6. Compliance Report (Limitation 4 addressed)",b:"The printable report generator creates a formatted HTML document containing field location, spray plan with EPA Registration Numbers, mitigation points assessment, and application restrictions. Under EPA Mitigation Menu Table 1 (Mitigation tracking), a grower/applicator who tracks the mitigations employed on paper or in electronic format, documented at the field or farm level, earns +1 point. Filing this report with spray records can serve as that tracking record, provided the listed measures are actually in place; printing alone, without maintaining the record, does not earn the point."},
+            {t:"6. Planning Record (Limitation 4 addressed)",b:"The printable planning record creates a formatted HTML document containing field location, spray plan with EPA Registration Numbers, mitigation points assessment, and application restrictions. Under EPA Mitigation Menu Table 1 (Mitigation tracking), a grower/applicator who tracks the mitigations employed on paper or in electronic format, documented at the field or farm level, earns +1 point. Filing this record with spray records may help support that tracking point, provided it lists the measures actually in place; printing alone, without maintaining the record, does not earn the point. It is a planning record, not a compliance document."},
             {t:"8. Data Currency (Limitation 3 addressed)",b:"All data sources carry version timestamps in the Data Versions tab. The EPA Mitigation Menu is updated annually in fall. ACES IPM Guides are revised annually (December). County vulnerability classifications are static until EPA revises them. The USDA SDA and EPA BLT APIs return real-time data. Users should verify the Data Versions tab before the start of each spray season."},
           ].map(({t,b})=><div key={t} style={{marginBottom:16}}><h3 style={{margin:"0 0 6px",fontSize:14,fontWeight:700,borderBottom:`1px solid ${k.bdrL}`,paddingBottom:4}}>{t}</h3><p style={{margin:0,fontSize:14,color:k.tx,lineHeight:1.7}}>{b}</p></div>)}
         </div>)}
