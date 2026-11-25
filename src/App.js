@@ -497,15 +497,19 @@ export default function App() {
   const enlistDeficit = Math.max(0, enlistReq - earnedEnlist);
   const ok = plan.length > 0 && menuDeficit === 0 && enlistDeficit === 0 && !anyNoSpray;
   const esaN = plan.filter(h => h.esa === "active").length;
-  const maxBuf = useMemo(() => plan.length ? Math.max(...plan.map(h => h.buf || 0)) : 0, [plan]);
-  const sWind = useMemo(() => { const v = plan.map(h => h.wMax).filter(Boolean); return v.length ? Math.min(...v) : null; }, [plan]);
+  // Fix 15: products that cannot be applied here (inside their no-application
+  // PULA) set no drift buffer, wind or speed limit.
+  const sprayPlan = useMemo(() => plan.filter(h => !((libertyNoSpray && h.id === "liberty-ultra") || (enlistNoSpray && (h.id === "enlist-one" || h.id === "enlist-duo")))), [plan, libertyNoSpray, enlistNoSpray]);
+  const allNoSpray = plan.length > 0 && sprayPlan.length === 0;
+  const maxBuf = useMemo(() => sprayPlan.length ? Math.max(...sprayPlan.map(h => h.buf || 0)) : 0, [sprayPlan]);
+  const sWind = useMemo(() => { const v = sprayPlan.map(h => h.wMax).filter(Boolean); return v.length ? Math.min(...v) : null; }, [sprayPlan]);
   // Most restrictive lower wind bound in the plan (highest wMin). A wMin is
   // mandatory for dicamba and Liberty ULTRA; for Enlist it is a label
   // recommendation ("for best results"), flagged by wMinAdv.
-  const sWindMin = useMemo(() => { const v = plan.map(h => h.wMin).filter(x => x != null); return v.length ? Math.max(...v) : null; }, [plan]);
-  const windMinAdv = plan.some(h => h.wMin != null && h.wMinAdv);
+  const sWindMin = useMemo(() => { const v = sprayPlan.map(h => h.wMin).filter(x => x != null); return v.length ? Math.max(...v) : null; }, [sprayPlan]);
+  const windMinAdv = sprayPlan.some(h => h.wMin != null && h.wMinAdv);
   const windText = sWind == null ? null : (sWindMin != null ? `${sWindMin}–${sWind} mph` : `${sWind} mph`);
-  const sSpd = useMemo(() => { const v = plan.map(h => h.spd).filter(Boolean); return v.length ? Math.min(...v) : null; }, [plan]);
+  const sSpd = useMemo(() => { const v = sprayPlan.map(h => h.spd).filter(Boolean); return v.length ? Math.min(...v) : null; }, [sprayPlan]);
 
   // ─── USDA SOIL DATA ACCESS API (Limitation 1) ───
   const lookupHSG = async () => {
@@ -757,7 +761,7 @@ export default function App() {
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:8}}>
               {enlistInPlan&&(enlistNoSpray?<MC l="Enlist One/Duo" v="Not allowed" su="inside its PULA" co={k.red}/>:<MC l="Enlist credits" v={enlistReq} su="label requirement" co={k.pur}/>)}
               {menuReq>0&&<MC l="EPA Menu points" v={menuReq} su="label requirement" co={k.amb}/>}
-              <MC l="Drift Buffer" v={`${maxBuf} ft`} su="downwind" co={k.blu}/>
+              {allNoSpray?<MC l="Drift Buffer" v="None" su="no product here can be applied" co={k.txM}/>:<MC l="Drift Buffer" v={`${maxBuf} ft`} su="downwind" co={k.blu}/>}
               {sWind&&<MC l="Wind" v={windText} su={windMinAdv?"at boom · lower bound advisory":"at boom"} co={k.pur}/> }
               {sSpd&&<MC l="Max Speed" v={`${sSpd} mph`} su="ground" co={k.acc}/>}
             </div>
@@ -969,7 +973,7 @@ export default function App() {
               {multiBonus===1&&<tr><td>Multi-category bonus (practices from 2+ categories, EPA Mitigation Menu Table 2)</td><td>1</td>{enlistInPlan&&<td>0</td>}<td>Yes</td></tr>}
             </tbody></table>
             <h2>Application Restrictions</h2>
-            <p>Max drift buffer: {maxBuf} ft &nbsp;|&nbsp; {sWind ? `Wind: ${windText}${windMinAdv?" (lower bound advisory for Enlist)":""}` : "Wind: Not modelled — check label"} &nbsp;|&nbsp; {sSpd?`Max speed: ${sSpd} mph`:"Max speed: Not modelled — check label"}</p>
+            {allNoSpray?<p>No product in this plan can be applied at this location, so no drift buffer, wind or speed limit applies.</p>:<p>Max drift buffer: {maxBuf} ft &nbsp;|&nbsp; {sWind ? `Wind: ${windText}${windMinAdv?" (lower bound advisory for Enlist)":""}` : "Wind: Not modelled — check label"} &nbsp;|&nbsp; {sSpd?`Max speed: ${sSpd} mph`:"Max speed: Not modelled — check label"}</p>}
             <h2>Label Restrictions This Tool Does NOT Check</h2>
             {plan.filter(h=>h.restr).map(h=>(<div key={h.id}><p><strong>{h.nm} (EPA Reg. {h.reg}):</strong></p><ul>{h.restr.map((r,i)=><li key={i}>{r}</li>)}</ul></div>))}
             {!plan.some(h=>h.restr) && <p>None of the products in this plan has a modelled label restriction in this tool. The label and BLT bulletin may still impose restrictions — check them before application.</p>}
