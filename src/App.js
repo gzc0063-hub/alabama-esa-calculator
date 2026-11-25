@@ -249,6 +249,13 @@ const k = {bg:"#f5f3f0",card:"#fff",bdr:"#d9d4cc",bdrL:"#ebe7e0",tx:"#1a1a1a",tx
 
 // Last verified data update — UPDATE THIS DATE every time you change any data
 const LAST_DATA_UPDATE = "November 20, 2026";
+// Fix 12: Liberty ULTRA (EPA Reg. 7969-500) may not be applied inside BLT
+// PULA 89 ("Enlist 2023 and Glufosinate 2024"), limitation code E323: "Do not
+// apply within the use limitation area." In Alabama this PULA covers a small
+// area of Cherokee County near the Georgia line. Source: EPA Bulletins Live! Two
+// PULA Limitations table (blt.epa.gov), checked Nov 25, 2026.
+const LIBERTY_NOSPRAY_PULAS = [89];
+const LIBERTY_NOSPRAY_TEXT = "Liberty ULTRA cannot be applied at this location. Your coordinates fall inside a Liberty ULTRA Pesticide Use Limitation Area, and the Bulletins Live! Two limitation says: \"Do not apply within the use limitation area.\" No mitigation points make this application allowed. Remove Liberty ULTRA from this plan for this field, and generate the BLT bulletin for your exact field and month.";
 const LABEL_COVERAGE_NOTE = "ESA label data verified through November 18, 2026. Products labeled: Liberty ULTRA, Enlist One, Enlist Duo, Engenia, Stryax, Tavium Plus, Voraxor, Convintro, Empera. All other products awaiting registration review.";
 
 export default function App() {
@@ -411,6 +418,8 @@ export default function App() {
   const pulaUnknownText = dicambaInPlan && emperaInPlan
     ? "Dicamba requires 6 points inside a PULA and Empera requires 3 points inside its PULAs"
     : dicambaInPlan ? "Dicamba requires 6 points inside a PULA" : "Empera requires 3 points inside its PULAs";
+  const libertyInPlan = plan.some(h => h.id === "liberty-ultra");
+  const libertyNoSpray = libertyInPlan && !!pulaResults?.found && (pulaResults.features || []).some(f => LIBERTY_NOSPRAY_PULAS.includes(f?.attributes?.pula_id));
   const sandBlockedInPlan = enlistInPlan || dicambaInPlan;
   const sandBlockReason = dicambaInPlan
     ? "Not available: the Feb 6, 2026 dicamba labels (Engenia, Stryax, Tavium Plus) prohibit application to sand soils with less than 3% organic matter where groundwater is shallow; Tavium Plus bans sand/loamy sand outright. This tool does not track soil organic matter or groundwater depth."
@@ -459,7 +468,7 @@ export default function App() {
   const earnedEnlist = useMemo(() => PRACT.filter(pr => prac.includes(pr.id)).reduce((t, pr) => t + enlistCr(pr), 0), [prac, enlistCr]);
   const menuDeficit = Math.max(0, menuReq - earned);
   const enlistDeficit = Math.max(0, enlistReq - earnedEnlist);
-  const ok = plan.length > 0 && menuDeficit === 0 && enlistDeficit === 0;
+  const ok = plan.length > 0 && menuDeficit === 0 && enlistDeficit === 0 && !libertyNoSpray;
   const esaN = plan.filter(h => h.esa === "active").length;
   const maxBuf = useMemo(() => plan.length ? Math.max(...plan.map(h => h.buf || 0)) : 0, [plan]);
   const sWind = useMemo(() => { const v = plan.map(h => h.wMax).filter(Boolean); return v.length ? Math.min(...v) : null; }, [plan]);
@@ -729,6 +738,10 @@ export default function App() {
             <h2 style={{margin:"0 0 10px",fontSize:14,fontWeight:700,color:k.txM,textTransform:"uppercase",letterSpacing:"1px"}}>Step 3 — Mitigation Points</h2>
             <div style={{padding:"12px 16px",borderRadius:7,border:`2px solid ${ok?k.grn:k.amb}`,background:ok?k.grnBg:k.bg,marginBottom:14}}>
               <div aria-live="polite" aria-atomic="true">
+                {libertyNoSpray && <div style={{marginBottom:12}}>
+                  <strong style={{display:"block",fontSize:22,color:k.red}}>Liberty ULTRA: no application allowed here</strong>
+                  <span style={{fontSize:14}}>Inside its PULA, the bulletin prohibits application. Points do not change that.</span>
+                </div>}
                 {enlistInPlan && <div style={{marginBottom:12}}>
                   <strong style={{display:"block",fontSize:22,color:enlistDeficit?k.amb:k.grn}}>{enlistDeficit ? "You still need "+enlistDeficit+" Enlist credits" : "Enlist credit requirement met"}</strong>
                   <span style={{fontSize:14}}>{earnedEnlist} earned of {enlistReq} required · Enlist label credits</span>
@@ -738,7 +751,7 @@ export default function App() {
                   <span style={{fontSize:14}}>{earned} earned of {menuReq} required · EPA Mitigation Menu</span>
                 </div>}
                 {enlistInPlan && menuReq===0 && <p style={{margin:"4px 0 10px",fontSize:14}}>EPA Menu points: {earned} earned. None required for this plan; these do not count as Enlist credits.</p>}
-                <p style={{margin:"6px 0",fontSize:14,fontWeight:600}}>{esaN===0?"None of the products in this plan carry an ESA points requirement yet. No mitigation points are needed for this plan.":(menuReq===0&&!enlistInPlan)?"No product in this plan needs EPA Menu points outside a PULA. No mitigation points are needed for this plan unless the field is inside a PULA.":ok?"Points requirement met — label restrictions not checked":"Select practices below that are actually used on your field. Label restrictions are not checked."}</p>
+                <p style={{margin:"6px 0",fontSize:14,fontWeight:600}}>{libertyNoSpray?"Liberty ULTRA cannot be applied at this location because it is inside its PULA. Remove it from this plan for this field; points for any other products are shown above.":esaN===0?"None of the products in this plan carry an ESA points requirement yet. No mitigation points are needed for this plan.":(menuReq===0&&!enlistInPlan)?"No product in this plan needs EPA Menu points outside a PULA. No mitigation points are needed for this plan unless the field is inside a PULA.":ok?"Points requirement met — label restrictions not checked":"Select practices below that are actually used on your field. Label restrictions are not checked."}</p>
               </div>
               {enlistInPlan && <details style={{fontSize:14,marginTop:8}}>
                 <summary style={{cursor:"pointer",padding:"8px 0",fontWeight:600}}>How Enlist credits differ from EPA points</summary>
@@ -750,6 +763,8 @@ export default function App() {
             {multiBonus===1 && <div style={{padding:"10px 14px",borderRadius:7,background:k.grnBg,border:`1px solid ${k.grnL}`,marginBottom:12,fontSize:14,color:k.grn,fontWeight:600}}>Multi-category bonus +1 point — your selected practices come from at least two categories (in-field, field-adjacent, or systems that capture runoff). EPA Mitigation Menu Table 2, "Using mitigation measures from multiple categories".</div>}
             {exclNote && (!prac.includes("eqip") || enlistInPlan) && <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb}}>{exclNote}</div>}
             {hsgResult && <div style={{padding:"10px 14px",borderRadius:7,background:k.purBg,border:`1px solid #c9b8e8`,marginBottom:12,fontSize:14,color:k.pur}}>Soil HSG {hsgResult}: {["C","D","C/D"].includes(hsgResult.toUpperCase()) ? "neither sandy-soil tier is available (HSG A or B only)." : hsgResult.toUpperCase().replace("/D","") === "B" ? "only the 2-point HSG B sandy tier applies." : "only the 3-point HSG A sandy tier applies."} (EPA Mitigation Menu Table 1, Predominantly sandy soils.)</div>}
+            {libertyNoSpray && <div role="alert" style={{padding:"10px 14px",borderRadius:7,background:k.redBg,border:`1px solid ${k.red}`,marginBottom:12,fontSize:14,color:k.red,fontWeight:600}}>{LIBERTY_NOSPRAY_TEXT}</div>}
+            {libertyInPlan && !libertyNoSpray && county==="Cherokee" && !pulaResults && <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Part of Cherokee County, near the Georgia line, is inside a Liberty ULTRA PULA where the Bulletins Live! Two limitation says: "Do not apply within the use limitation area." Run the PULA check at your field's coordinates, or generate the BLT bulletin, before relying on this result.</div>}
             {plan.some(h=>h.ptsPULA!=null) && (pulaResults?.found
               ? <div style={{padding:"10px 14px",borderRadius:7,background:k.ambBg,border:`1px solid #e8c96a`,marginBottom:12,fontSize:14,color:k.amb,fontWeight:600}}>Requirement raised because this field is inside a PULA: {pulaRaisedText}. This is what the tool knows from the PULA check at your coordinates — it does not know your product or month, so generate the BLT bulletin and follow it before application.</div>
               : pulaResults && pulaResults.found === false
@@ -877,6 +892,7 @@ export default function App() {
             {pulaResults && <div style={{marginTop:10,padding:"12px 16px",borderRadius:6,background:pulaResults.found?k.ambBg:k.grnBg,border:`1px solid ${pulaResults.found?k.amb:k.grn}33`}}>
               {pulaResults.found ? <>
                 <p style={{margin:0,fontSize:14,fontWeight:700,color:k.amb}}>⚠ {pulaResults.count} PULA{pulaResults.count>1?"s":""} detected at this location</p>
+                {libertyNoSpray && <p style={{margin:"6px 0 0",fontSize:14,fontWeight:700,color:k.red}}>{LIBERTY_NOSPRAY_TEXT}</p>}
                 <p style={{margin:"6px 0 0",fontSize:14,color:k.tx}}>You <strong>must</strong> generate and follow the official bulletin from EPA's Bulletins Live! Two website before application.</p>
                 <p style={{margin:"6px 0 0",fontSize:14,color:k.txM}}>What this check knows: PULAs exist at this point. What it does not know: your product or month, or what the bulletin itself requires. This check does not produce a bulletin. The binding determination is the bulletin from EPA's Bulletins Live! Two website for your product and month.</p>
                 <a href="https://www.epa.gov/endangered-species/bulletins-live-two-view-bulletins" target="_blank" rel="noopener noreferrer" style={{marginTop:8,...s.btn(k.amb,"#fff"),textDecoration:"none",fontSize:14,display:"inline-flex",alignItems:"center",justifyContent:"center",minHeight:"44px"}}>Open Bulletins Live! Two →</a>
@@ -907,7 +923,7 @@ export default function App() {
             <h2>Mitigation Points Assessment</h2>
             <p><strong>Menu points — Maximum required:</strong> {menuReq} points &nbsp;|&nbsp; <strong>Earned:</strong> {earned} points</p>
             {enlistInPlan&&<p><strong>Enlist credits — Required:</strong> {enlistReq} credits &nbsp;|&nbsp; <strong>Earned:</strong> {earnedEnlist} credits &nbsp;|&nbsp; <em>Enlist One/Duo use their own label credit table; county relief and the multi-category bonus do not count toward Enlist credits.</em></p>}
-            <p><strong>Status:</strong> <span className={ok?"pass":"fail"}>{esaN===0?"No ESA points requirement for this plan":(menuReq===0&&!enlistInPlan)?"No mitigation points needed for this plan outside a PULA":ok?"Points requirement met — label restrictions not checked":`Points shortfall: ${menuDeficit>0?`Menu ${menuDeficit} pts. `:""}${enlistDeficit>0?`Enlist ${enlistDeficit} credits. `:""}`}</span></p>
+            <p><strong>Status:</strong> <span className={ok?"pass":"fail"}>{libertyNoSpray?"Liberty ULTRA cannot be applied at this location (inside its PULA)":esaN===0?"No ESA points requirement for this plan":(menuReq===0&&!enlistInPlan)?"No mitigation points needed for this plan outside a PULA":ok?"Points requirement met — label restrictions not checked":`Points shortfall: ${menuDeficit>0?`Menu ${menuDeficit} pts. `:""}${enlistDeficit>0?`Enlist ${enlistDeficit} credits. `:""}`}</span></p>
             <p>This verdict covers runoff/erosion points only. It does not check the label restrictions listed below.</p>
             <table><thead><tr><th>Practice</th><th>Points</th>{enlistInPlan&&<th>Enlist Cr</th>}<th>Applied</th></tr></thead>
             <tbody>
